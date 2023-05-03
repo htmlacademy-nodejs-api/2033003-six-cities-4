@@ -1,8 +1,8 @@
-import { User } from "./user.type";
+import { User } from './user.type';
 
 export type Comment = {
-  text: string; 
-  publicationDate: Date; 
+  text: string;
+  publicationDate: Date;
   rating: number;
   author: User;
-};
+}
