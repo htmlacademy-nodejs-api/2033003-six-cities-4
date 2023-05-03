@@ -1,7 +1,7 @@
 import { Amenities } from './amenities.enum';
 import { CityCoordinates } from './city-coordinates.type';
 import { RentalType } from './rental-type.enum';
-import { UserType } from './user-type.enum';
+import { User } from './user.type';
 
 export type RentalOffer = {
   title: string;
@@ -18,7 +18,7 @@ export type RentalOffer = {
   guests: number;
   price: number;
   amenities: Amenities[];
-  author: UserType;
+  author: User;
   commentsCount: number;
   coordinates: CityCoordinates;
 };
