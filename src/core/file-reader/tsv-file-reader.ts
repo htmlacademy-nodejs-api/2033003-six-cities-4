@@ -9,7 +9,7 @@ import { CityCoordinates } from '../../types/city-coordinates.type.js';
 import { cities } from '../../const.js';
 
 export default class TSVFileReader implements FileReaderInterface {
-  private rawData = '';
+  private rawData: string | undefined;
 
   constructor(public filename: string) { }
 
