@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+
 import { FileReaderInterface } from './file-reader.interface.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
 import { RentalType } from '../../types/rental-type.enum.js';
