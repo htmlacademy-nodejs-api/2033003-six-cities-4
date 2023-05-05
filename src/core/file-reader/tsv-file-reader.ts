@@ -1,17 +1,15 @@
 import { promises } from 'node:fs';
 
-import { FileReaderInterface } from './file-reader.interface';
-import { RentalOffer } from '../../types/rental-offer.type';
-import { RentalType } from '../../types/rental-type.enum';
-import { Amenities } from '../../types/amenities.enum';
-import { UserType } from '../../types/user-type.enum';
-import { CityCoordinates } from '../../types/city-coordinates.type';
 import { cities } from '../../const.js';
+import { RentalType } from '../../types/rental-type.enum.js';
+import { Amenities } from '../../types/amenities.enum.js';
+import { UserType } from '../../types/user-type.enum.js';
+import type { CityCoordinates } from '../../types/city-coordinates.type.js';
+import type { FileReaderInterface } from './file-reader.interface.js';
+import type { RentalOffer } from '../../types/rental-offer.type.js';
 
 export default class TSVFileReader implements FileReaderInterface {
-  private rawData: string | undefined;
-
-  constructor(public filename: string) { }
+  constructor(public filename: string, private rawData?: string) { }
 
   public async read(): Promise<void> {
     this.rawData = await promises.readFile(this.filename, { encoding: 'utf8' });

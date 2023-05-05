@@ -1,7 +1,7 @@
-import { Amenities } from './amenities.enum';
-import { CityCoordinates } from './city-coordinates.type';
-import { RentalType } from './rental-type.enum';
-import { User } from './user.type';
+import { Amenities } from './amenities.enum.js';
+import { RentalType } from './rental-type.enum.js';
+import type { CityCoordinates } from './city-coordinates.type.js';
+import type { User } from './user.type.js';
 
 export type RentalOffer = {
   title: string;

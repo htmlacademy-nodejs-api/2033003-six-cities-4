@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import chalk from 'chalk';
 
-import { CliCommandInterface } from './cli-command.interface';
+import type { CliCommandInterface } from './cli-command.interface.js';
 
 export default class VersionCommand implements CliCommandInterface {
   public readonly name = '--version';

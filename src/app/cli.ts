@@ -1,4 +1,4 @@
-import { CliCommandInterface } from '../core/cli-command/cli-command.interface';
+import type { CliCommandInterface } from '../core/cli-command/cli-command.interface.js';
 
 type ParsedCommand = Record<string, string[]>;
 
@@ -8,7 +8,7 @@ export default class CLIApplication {
 
   private parseCommand(cliArguments: string[]): ParsedCommand {
     const parsedCommand: ParsedCommand = {};
-    let command: string | undefined;
+    let command: string;
 
     cliArguments.forEach((item) => {
       if (item.startsWith('--')) {
