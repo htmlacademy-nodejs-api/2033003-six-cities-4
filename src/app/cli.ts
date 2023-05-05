@@ -8,18 +8,18 @@ export default class CLIApplication {
 
   private parseCommand(cliArguments: string[]): ParsedCommand {
     const parsedCommand: ParsedCommand = {};
-    let command = '';
+    let command: string | undefined;
 
-    return cliArguments.reduce((acc, item) => {
+    cliArguments.forEach((item) => {
       if (item.startsWith('--')) {
-        acc[item] = [];
         command = item;
+        parsedCommand[command] = [];
       } else if (command && item) {
-        acc[command].push(item);
+        parsedCommand[command].push(item);
       }
+    });
 
-      return acc;
-    }, parsedCommand);
+    return parsedCommand;
   }
 
   public getCommand(commandName: string): CliCommandInterface {
@@ -31,6 +31,7 @@ export default class CLIApplication {
     const [commandName] = Object.keys(parsedCommand);
     const command = this.getCommand(commandName);
     const commandArguments = parsedCommand[commandName] ?? [];
+
     command.execute(...commandArguments);
   }
 

@@ -6,6 +6,6 @@ import VersionCommand from './core/cli-command/version.command.js';
 
 const cliApp = new CLIApplication();
 cliApp.registerCommands([
-  new HelpCommand, new VersionCommand, new ImportCommand,
+  new HelpCommand(), new VersionCommand(), new ImportCommand(),
 ]);
 cliApp.processCommand(process.argv);
