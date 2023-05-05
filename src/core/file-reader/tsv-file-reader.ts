@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { promises } from 'node:fs';
 
 import { FileReaderInterface } from './file-reader.interface.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
@@ -13,8 +13,8 @@ export default class TSVFileReader implements FileReaderInterface {
 
   constructor(public filename: string) { }
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf8' });
+  public async read(): Promise<void> {
+    this.rawData = await promises.readFile(this.filename, { encoding: 'utf8' });
   }
 
   public toArray(): RentalOffer[] {

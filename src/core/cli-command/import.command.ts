@@ -3,12 +3,12 @@ import { CliCommandInterface } from './cli-command.interface.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
-  public execute(filename: string): void {
+  public async execute(filename: string): Promise<void>  {
     // Чтение файла
     const fileReader = new TSVFileReader(filename.trim());
 
     try {
-      fileReader.read();
+      await fileReader.read();
       console.log(fileReader.toArray());
     } catch (err) {
 
