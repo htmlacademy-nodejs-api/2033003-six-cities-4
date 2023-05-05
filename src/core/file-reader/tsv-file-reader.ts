@@ -1,11 +1,11 @@
 import { promises } from 'node:fs';
 
-import { FileReaderInterface } from './file-reader.interface.js';
-import { RentalOffer } from '../../types/rental-offer.type.js';
-import { RentalType } from '../../types/rental-type.enum.js';
-import { Amenities } from '../../types/amenities.enum.js';
-import { UserType } from '../../types/user-type.enum.js';
-import { CityCoordinates } from '../../types/city-coordinates.type.js';
+import { FileReaderInterface } from './file-reader.interface';
+import { RentalOffer } from '../../types/rental-offer.type';
+import { RentalType } from '../../types/rental-type.enum';
+import { Amenities } from '../../types/amenities.enum';
+import { UserType } from '../../types/user-type.enum';
+import { CityCoordinates } from '../../types/city-coordinates.type';
 import { cities } from '../../const.js';
 
 export default class TSVFileReader implements FileReaderInterface {

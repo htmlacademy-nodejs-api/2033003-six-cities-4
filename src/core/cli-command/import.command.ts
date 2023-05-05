@@ -1,5 +1,5 @@
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
-import { CliCommandInterface } from './cli-command.interface.js';
+import { CliCommandInterface } from './cli-command.interface';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
