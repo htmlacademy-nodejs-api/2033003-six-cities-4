@@ -4,8 +4,8 @@ import HelpCommand from './core/cli-command/helper.command.js';
 import ImportCommand from './core/cli-command/import.command.js';
 import VersionCommand from './core/cli-command/version.command.js';
 
-const myManager = new CLIApplication();
-myManager.registerCommands([
+const cliApp = new CLIApplication();
+cliApp.registerCommands([
   new HelpCommand, new VersionCommand, new ImportCommand,
 ]);
-myManager.processCommand(process.argv);
+cliApp.processCommand(process.argv);

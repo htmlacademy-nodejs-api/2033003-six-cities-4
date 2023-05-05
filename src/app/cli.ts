@@ -4,7 +4,7 @@ type ParsedCommand = Record<string, string[]>;
 
 export default class CLIApplication {
   private commands: Record<string, CliCommandInterface> = {};
-  private defaultCommand = '--help';
+  private readonly defaultCommand = '--help';
 
   private parseCommand(cliArguments: string[]): ParsedCommand {
     const parsedCommand: ParsedCommand = {};
