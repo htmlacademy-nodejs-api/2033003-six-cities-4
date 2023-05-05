@@ -35,8 +35,7 @@ export default class TSVFileReader implements FileReaderInterface {
       .map(([title, description, publicationDate, city, previewImage, images, isPremium, isFavorite, rating, type, rooms, guests, price, amenities, author, email, password, userType, commentsCount]) => {
         const parsedAmenities = amenities.split(';').filter((amenity) => amenity !== '');
         const parsedImages = images.split(';');
-        const cityCoordinates: CityCoordinates = cities[city];
-        const { latitude, longitude } = cityCoordinates;
+        const { latitude, longitude } = cities[city];
 
         const rentalOffer: RentalOffer = {
           title,
