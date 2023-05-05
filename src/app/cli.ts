@@ -35,10 +35,9 @@ export default class CLIApplication {
   }
 
   public registerCommands(commandList: CliCommandInterface[]): void {
-    commandList.reduce((acc, command) => {
-      const cliCommand = command;
-      acc[cliCommand.name] = cliCommand;
-      return acc;
-    }, this.commands);
+    this.commands = commandList.reduce((acc, value) => ({
+      ...acc,
+      [value.name]: value
+    }), {});
   }
 }
