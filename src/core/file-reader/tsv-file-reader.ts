@@ -40,7 +40,7 @@ export default class TSVFileReader implements FileReaderInterface {
         const rentalOffer: RentalOffer = {
           title,
           description,
-          publicationDate: new Date(publicationDate),
+          publicationDate: new Date(publicationDate).toISOString(),
           city,
           previewImage,
           images: parsedImages,
