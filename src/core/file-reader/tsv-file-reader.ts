@@ -12,7 +12,15 @@ export default class TSVFileReader implements FileReaderInterface {
   constructor(public filename: string, private rawData?: string) { }
 
   public async read(): Promise<void> {
-    this.rawData = await promises.readFile(this.filename, { encoding: 'utf8' });
+    try {
+      await promises.access(this.filename);
+      this.rawData = await promises.readFile(this.filename, { encoding: 'utf8' });
+    } catch (error) {
+      if (!(error instanceof Error)) {
+        throw error;
+      }
+      console.log(`Failed to access or read the file: ${error}`);
+    }
   }
 
   public toArray(): RentalOffer[] {

@@ -1,4 +1,4 @@
-import { CityCoordinates } from './types/city-coordinates.type';
+import type { CityCoordinates } from './types/city-coordinates.type.js';
 import { City } from './types/city.enum.js';
 
 export const cities: Record<string, CityCoordinates> = {
