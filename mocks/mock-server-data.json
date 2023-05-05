@@ -1,0 +1,168 @@
+{
+  "api": {
+    "titles": [
+      "Уютная квартира в Париже",
+      "Просторный дом в Амстердаме",
+      "Удобная комната в Кёльне",
+      "Роскошный отель в Брюсселе",
+      "Шикарная вилла на берегу озера"
+    ],
+    "descriptions": [
+      "Уютная квартира в самом центре Парижа. Идеальное место для отдыха и знакомства с городом света.",
+      "Просторный дом с прекрасным видом на каналы Амстердама. Идеальное место для семейного отдыха и экскурсий по городу.",
+      "Удобная комната в центре Кёльна. Отличный вариант для путешественников с ограниченным бюджетом.",
+      "Роскошный отель в самом сердце Брюсселя. Идеальное место для деловых поездок и романтических выходных.",
+      "Шикарная вилла на берегу озера. Идеальное место для релаксации и наслаждения прекрасными пейзажами."
+    ],
+    "publicationDates": [
+      "2023-05-01",
+      "2023-05-02",
+      "2023-05-03",
+      "2023-05-04",
+      "2023-05-05"
+    ],
+    "cities": [
+      "Paris",
+      "Amsterdam",
+      "Cologne",
+      "Brussels",
+      "Hamburg"
+    ],
+    "previewImages": [
+      "paris-apartment.jpg",
+      "amsterdam-house.jpg",
+      "cologne-room.jpg",
+      "brussels-hotel.jpg",
+      "hamburg-villa.jpg"
+    ],
+    "images": [
+      ["paris-apartment1.jpg", "paris-apartment2.jpg", "paris-apartment3.jpg"],
+      ["amsterdam-house1.jpg", "amsterdam-house2.jpg", "amsterdam-house3.jpg"],
+      ["cologne-room1.jpg", "cologne-room2.jpg", "cologne-room3.jpg"],
+      ["brussels-hotel1.jpg", "brussels-hotel2.jpg", "brussels-hotel3.jpg"],
+      ["hamburg-villa1.jpg", "hamburg-villa2.jpg", "hamburg-villa3.jpg"]
+    ],
+    "isPremium": [
+      true,
+      false,
+      true,
+      false,
+      true
+    ],
+    "isFavorite": [
+      false,
+      true,
+      true,
+      false,
+      true
+    ],"ratings": [
+      4.5,
+      4.7,
+      4.3,
+      4.8,
+      4.6
+    ],
+    "types": [
+      "apartment",
+      "house",
+      "room",
+      "hotel",
+      "house"
+    ],
+    "rooms": [
+      3,
+      4,
+      2,
+      5,
+      6
+    ],
+    "guests": [
+      6,
+      8,
+      2,
+      10,
+      12
+    ],
+    "prices": [
+      5000,
+      7500,
+      4000,
+      9000,
+      12000
+    ],
+    "amenities": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "authors": [
+      {
+        "name": "Анна",
+        "email": "anna@example.com",
+        "avatar": "anna-avatar.jpg",
+        "password": "password1",
+        "userType": "обычный"
+      },
+      {
+        "name": "Михаил",
+        "email": "mikhail@example.com",
+        "avatar": "mikhail-avatar.jpg",
+        "password": "password2",
+        "userType": "pro"
+      },
+      {
+        "name": "Ольга",
+        "email": "olga@example.com",
+        "avatar": "olga-avatar.jpg",
+        "password": "password3",
+        "userType": "обычный"
+      },
+      {
+        "name": "Александр",
+        "email": "alexander@example.com",
+        "avatar": "alexander-avatar.jpg",
+        "password": "password4",
+        "userType": "pro"
+      },
+      {
+        "name": "Екатерина",
+        "email": "ekaterina@example.com",
+        "avatar": "ekaterina-avatar.jpg",
+        "password": "password5",
+        "userType": "обычный"
+      }
+    ],
+    "commentsCount": [
+      9,
+      10,
+      5,
+      12,
+      8
+    ],
+    "coordinates": [
+      {
+        "latitude": 48.85661,
+        "longitude": 2.351499
+      },
+      {
+        "latitude": 52.370216,
+        "longitude": 4.895168
+      },
+      {
+        "latitude": 50.938361,
+        "longitude": 6.959974
+      },
+      {
+        "latitude": 50.846557,
+        "longitude": 4.351697
+      },
+      {
+        "latitude": 53.550341,
+        "longitude": 10.000654
+      }
+    ]
+  }
+}
