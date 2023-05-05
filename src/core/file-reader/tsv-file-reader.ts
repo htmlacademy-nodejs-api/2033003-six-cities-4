@@ -4,9 +4,9 @@ import { cities } from '../../const.js';
 import { RentalType } from '../../types/rental-type.enum.js';
 import { Amenities } from '../../types/amenities.enum.js';
 import { UserType } from '../../types/user-type.enum.js';
-import type { CityCoordinates } from '../../types/city-coordinates.type.js';
 import type { FileReaderInterface } from './file-reader.interface.js';
 import type { RentalOffer } from '../../types/rental-offer.type.js';
+import type { City } from '../../types/city.enum.js';
 
 export default class TSVFileReader implements FileReaderInterface {
   constructor(public filename: string, private rawData?: string) { }
@@ -35,7 +35,7 @@ export default class TSVFileReader implements FileReaderInterface {
       .map(([title, description, publicationDate, city, previewImage, images, isPremium, isFavorite, rating, type, rooms, guests, price, amenities, author, email, password, userType, commentsCount]) => {
         const parsedAmenities = amenities.split(';').filter((amenity) => amenity !== '');
         const parsedImages = images.split(';');
-        const { latitude, longitude } = cities[city];
+        const { latitude, longitude } = cities[city as City] || {};
 
         const rentalOffer: RentalOffer = {
           title,
