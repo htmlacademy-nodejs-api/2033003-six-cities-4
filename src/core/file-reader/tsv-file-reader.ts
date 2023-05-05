@@ -33,9 +33,28 @@ export default class TSVFileReader implements FileReaderInterface {
       .filter((row) => row.trim() !== '')
       .map((line) => line.split('\t'))
       .map(([title, description, publicationDate, city, previewImage, images, isPremium, isFavorite, rating, type, rooms, guests, price, amenities, author, email, password, userType, commentsCount]) => {
-        const parsedAmenities = amenities.split(';').filter((amenity) => amenity !== '');
+        const parsedAmenities = amenities
+          .split(';')
+          .filter((amenity) => amenity !== '')
+          .map((amenity) => {
+            if (Object.values(Amenities).includes(amenity as Amenities)) {
+              return amenity as Amenities;
+            }
+            return '';
+          })
+          .filter((amenity) => amenity !== '');
         const parsedImages = images.split(';');
-        const { latitude, longitude } = cities[city as City] || {};
+        const { latitude = 0, longitude = 0 } = cities[city as City] || {};
+
+        let rentalType: RentalType = RentalType.Apartment;
+        if (Object.values(RentalType).includes(type as RentalType)) {
+          rentalType = type as RentalType;
+        }
+
+        let userRole: UserType = UserType.Base;
+        if (Object.values(UserType).includes(userType as UserType)) {
+          userRole = userType as UserType;
+        }
 
         const rentalOffer: RentalOffer = {
           title,
@@ -47,7 +66,7 @@ export default class TSVFileReader implements FileReaderInterface {
           isPremium: Boolean(isPremium),
           isFavorite: Boolean(isFavorite),
           rating: parseFloat(rating),
-          type: type as RentalType,
+          type: rentalType,
           rooms: parseInt(rooms, 10),
           guests: parseInt(guests, 10),
           price: parseFloat(price),
@@ -56,7 +75,7 @@ export default class TSVFileReader implements FileReaderInterface {
             name: author,
             email,
             password,
-            userType: userType as UserType
+            userType: userRole as UserType
           },
           commentsCount: parseInt(commentsCount, 10),
           coordinates: {
