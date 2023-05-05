@@ -10,15 +10,16 @@ export default class ImportCommand implements CliCommandInterface {
     }
     const fileReader = new TSVFileReader(filename.trim());
 
-    try {
-      await fileReader.read();
-      console.log(fileReader.toArray());
-    } catch (err) {
-      if (!(err instanceof Error)) {
-        throw err;
-      }
-    
-      console.log(`Не удалось импортировать данные из файла по причине: "${err.message}"`);
-    }
+    return fileReader.read()
+      .then(() => {
+        console.log(fileReader.toArray());
+      })
+      .catch((err) => {
+        if (!(err instanceof Error)) {
+          throw err;
+        }
+
+        console.log(`Failed to import data from the file: "${err.message}"`);
+      });
   }
 }
