@@ -36,11 +36,11 @@
       "hamburg-villa.jpg"
     ],
     "images": [
-      ["paris-apartment1.jpg", "paris-apartment2.jpg", "paris-apartment3.jpg"],
-      ["amsterdam-house1.jpg", "amsterdam-house2.jpg", "amsterdam-house3.jpg"],
-      ["cologne-room1.jpg", "cologne-room2.jpg", "cologne-room3.jpg"],
-      ["brussels-hotel1.jpg", "brussels-hotel2.jpg", "brussels-hotel3.jpg"],
-      ["hamburg-villa1.jpg", "hamburg-villa2.jpg", "hamburg-villa3.jpg"]
+      ["https://paris-apartment1.jpg", "https://paris-apartment2.jpg", "https://paris-apartment3.jpg"],
+      ["https://amsterdam-house1.jpg", "https://amsterdam-house2.jpg", "https://amsterdam-house3.jpg"],
+      ["https://cologne-room1.jpg", "https://cologne-room2.jpg", "https://cologne-room3.jpg"],
+      ["https://brussels-hotel1.jpg", "https://brussels-hotel2.jpg", "https://brussels-hotel3.jpg"],
+      ["https://hamburg-villa1.jpg", "https://hamburg-villa2.jpg", "https://hamburg-villa3.jpg"]
     ],
     "isPremium": [
       true,
@@ -102,45 +102,38 @@
       {
         "name": "Анна",
         "email": "anna@example.com",
-        "avatar": "anna-avatar.jpg",
+        "avatar": "https://anna-avatar.jpg",
         "password": "password1",
         "userType": "обычный"
       },
       {
         "name": "Михаил",
         "email": "mikhail@example.com",
-        "avatar": "mikhail-avatar.jpg",
+        "avatar": "https://mikhail-avatar.jpg",
         "password": "password2",
         "userType": "pro"
       },
       {
         "name": "Ольга",
         "email": "olga@example.com",
-        "avatar": "olga-avatar.jpg",
+        "avatar": "https://olga-avatar.jpg",
         "password": "password3",
         "userType": "обычный"
       },
       {
         "name": "Александр",
         "email": "alexander@example.com",
-        "avatar": "alexander-avatar.jpg",
+        "avatar": "https://alexander-avatar.jpg",
         "password": "password4",
         "userType": "pro"
       },
       {
         "name": "Екатерина",
         "email": "ekaterina@example.com",
-        "avatar": "ekaterina-avatar.jpg",
+        "avatar": "https://ekaterina-avatar.jpg",
         "password": "password5",
         "userType": "обычный"
       }
-    ],
-    "commentsCount": [
-      9,
-      10,
-      5,
-      12,
-      8
     ],
     "coordinates": [
       {

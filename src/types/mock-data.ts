@@ -4,6 +4,11 @@ export type MockData = {
   cities: string[];
   previewImages: string[];
   images: string[][];
+  isPremium: string;
+  isFavorite: string;
+  rating: string;
+  rooms: string;
+  guests: string;
   types: string[];
   amenities: string[];
   authors: {

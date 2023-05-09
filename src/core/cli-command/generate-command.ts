@@ -1,5 +1,6 @@
+import { appendFile } from 'node:fs/promises';
+
 import got from 'got';
-import { appendFile } from 'fs/promises';
 
 import { MockData } from '../../types/mock-data.js';
 import { CliCommandInterface } from './cli-command.interface.js';
