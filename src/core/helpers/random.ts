@@ -26,13 +26,15 @@ export function generateRating(): number {
   return Math.floor(Math.random() * (max - min + 1) * factor) / factor + min;
 }
 
-export function randomNumber(min: number, max: number, decimalPlaces: number = 0): number {
-  const random = Math.random() * (max - min) + min;
-  return Number(random.toFixed(decimalPlaces));
+export function randomCoordinates(): CityCoordinates {
+  const latitude = generateRandomValue(-90, 90, 6);
+  const longitude = generateRandomValue(-180, 180, 6);
+  return { latitude, longitude };
 }
 
-export function randomCoordinates(): CityCoordinates {
-  const latitude = randomNumber(-90, 90, 6);
-  const longitude = randomNumber(-180, 180, 6);
-  return { latitude, longitude };
+export function getRandomImages(images: string[][]): string[] {
+  return images.map((imageArray) => {
+    const randomIndex = Math.floor(Math.random() * imageArray.length);
+    return imageArray[randomIndex];
+  });
 }
