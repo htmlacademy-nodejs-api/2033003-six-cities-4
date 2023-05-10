@@ -1,7 +1,6 @@
 import type { RentalOffer } from '../../types/rental-offer.type.js';
 
 export function createOffer(offerData: string): RentalOffer {
-  
   const [
     title,
     description,

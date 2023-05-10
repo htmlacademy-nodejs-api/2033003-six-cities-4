@@ -4,7 +4,7 @@ import { RentalType } from './../../types/rental-type.enum.js';
 import { generateRandomValue, getRandomBoolean, getRandomImages, getRandomItem, getRandomItems, objectToString, randomCoordinates } from '../../core/helpers/index.js';
 import { MockData } from '../../types/mock-data.js';
 import { DATE_FORMAT, FIRST_WEEK_DAY, LAST_WEEK_DAY, MAX_COUNT_GUESTS, MAX_COUNT_ROOMS, MAX_PRICE, MAX_RATING, MIN_COUNT_GUESTS, MIN_COUNT_ROOMS, MIN_PRICE, MIN_RATING } from '../../const.js';
-import { OfferGeneratorInterface } from './offer-generator.interface.js';
+import type { OfferGeneratorInterface } from './offer-generator.interface.js';
 
 export default class OfferGenerator implements OfferGeneratorInterface {
   constructor(private readonly mockData: MockData) {}
