@@ -26,3 +26,5 @@ export const MAX_COUNT_ROOMS = 12;
 
 export const MIN_COUNT_GUESTS = 1;
 export const MAX_COUNT_GUESTS = 8;
+
+export const CHUNK_SIZE = 16384;

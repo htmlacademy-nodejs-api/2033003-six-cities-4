@@ -1,12 +1,14 @@
-import { RentalOffer } from '../../types/rental-offer.type';
-import { RentalType } from '../../types/rental-type.enum';
+import type { RentalOffer } from '../../types/rental-offer.type.js';
 
 export function createOffer(offerData: string): RentalOffer {
+  
   const [
     title,
     description,
     publicationDate,
     city,
+    longitude,
+    latitude,
     previewImage,
     images,
     isPremium,
@@ -17,35 +19,42 @@ export function createOffer(offerData: string): RentalOffer {
     guests,
     price,
     amenities,
-    commentsCount
+    name,
+    email,
+    avatarUrl,
+    password,
+    userType,
   ] = offerData.replace('\n', '').split('\t');
 
-  let rentalType: RentalType = RentalType.Apartment;
+  const author = {
+    name,
+    email,
+    avatarUrl,
+    password,
+    userType
+  };
 
-  if (Object.values(RentalType).includes(type as RentalType)) {
-    rentalType = type as RentalType;
-  }
+  const coordinates = {
+    longitude: parseInt(longitude, 10),
+    latitude: parseInt(latitude, 10),
+  };
 
   return {
     title,
     description,
     publicationDate: new Date(publicationDate).toISOString(),
     city,
+    coordinates,
     previewImage,
     images: images.split(';'),
     isPremium: Boolean(isPremium),
     isFavorite: Boolean(isFavorite),
     rating: parseFloat(rating),
-    type: rentalType,
+    type,
     rooms: parseInt(rooms, 10),
     guests: parseInt(guests, 10),
     price: parseFloat(price),
-    amenities: amenities as unknown,
-    author: offerData as unknown,
-    commentsCount: parseInt(commentsCount, 10),
-    coordinates: {
-      latitude: 12.2323,
-      longitude:24.343
-    }
+    amenities: amenities.split(';'),
+    author
   } as RentalOffer;
 }

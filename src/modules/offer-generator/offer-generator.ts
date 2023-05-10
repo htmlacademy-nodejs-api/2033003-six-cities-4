@@ -29,9 +29,9 @@ export default class OfferGenerator implements OfferGeneratorInterface {
 
     return [
       title, description, publicationDate,
-      city, previewImage, images,isPremium,
+      city, coordinates, previewImage, images,isPremium,
       isFavorite, rating, type, rooms, guests,
-      price, amenities, author, coordinates
+      price, amenities, author
     ].join('\t');
   }
 }

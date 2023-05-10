@@ -1,25 +1,30 @@
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
+import { getErrorMessage } from '../helpers/common.js';
+import { createOffer } from '../helpers/offers.js';
 import type { CliCommandInterface } from './cli-command.interface.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
+
+  private onLine(line: string) {
+    const offer = createOffer(line);
+    console.log(offer);
+  }
+
+  private onComplete(count: number) {
+    console.log(`${count} rows imported.`);
+  }
+
   public async execute(filename: string): Promise<void> {
-    if (!filename) {
-      console.error('Не указано имя файла для импорта данных');
-      return;
-    }
     const fileReader = new TSVFileReader(filename.trim());
 
-    return fileReader.read()
-      .then(() => {
-        console.log(fileReader.toArray());
-      })
-      .catch((err) => {
-        if (!(err instanceof Error)) {
-          throw err;
-        }
+    fileReader.on('line', this.onLine);
+    fileReader.on('end', this.onComplete);
 
-        console.log(`Failed to import data from the file: "${err.message}"`);
-      });
+    try {
+      await fileReader.read();
+    } catch(err) {
+      console.log(`Can't read the file: ${getErrorMessage(err)}`);
+    }
   }
 }
