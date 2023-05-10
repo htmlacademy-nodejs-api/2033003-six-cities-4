@@ -18,4 +18,8 @@ export type MockData = {
     password: string;
     userType: string;
   }[];
+  coordinates: {
+    latitude: string;
+    longitude: string;
+  }
 };
