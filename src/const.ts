@@ -10,22 +10,22 @@ export const cities: Record<City, CityCoordinates> = {
   [City.Dusseldorf]: { latitude: 51.225402, longitude: 6.776314 }
 };
 
-export const MIN_PRICE = 500;
-export const MAX_PRICE = 2000;
+export const MIN_OFFER_PRICE = 500;
+export const MAX_OFFER_PRICE = 2000;
 
 export const FIRST_WEEK_DAY = 1;
 export const LAST_WEEK_DAY = 7;
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
 
-export const MIN_RATING = 1;
-export const MAX_RATING = 5;
+export const MIN_OFFER_RATING = 1;
+export const MAX_OFFER_RATING = 5;
 
-export const MIN_COUNT_ROOMS = 1;
-export const MAX_COUNT_ROOMS = 12;
+export const MIN_COUNT_OFFER_ROOMS = 1;
+export const MAX_COUNT_OFFER_ROOMS = 12;
 
-export const MIN_COUNT_GUESTS = 1;
-export const MAX_COUNT_GUESTS = 8;
+export const MIN_COUNT_OFFER_GUESTS = 1;
+export const MAX_COUNT_OFFER_GUESTS = 8;
 
 export const CHUNK_SIZE_READER = 16384;
 export const CHUNK_SIZE_WRITER = 2 ** 16;

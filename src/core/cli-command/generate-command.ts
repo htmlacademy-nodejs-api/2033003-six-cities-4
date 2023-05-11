@@ -13,12 +13,13 @@ export default class GenerateCommand implements CliCommandInterface {
     const [count, filepath, url] = parameters;
     const offerCount = Number.parseInt(count, 10);
 
-    try {
-      this.initialData = await got.get(url).json();
-    } catch {
-      console.log(`Can't fetch data from ${url}.`);
-      return;
-    }
+    this.initialData = await got.get(url)
+      .json()
+      .then((data: unknown) => data as MockData)
+      .catch((error) => {
+        console.log(`Can't fetch data from ${url}. ${error}`);
+        return {} as MockData;
+      });
 
     const offerGeneratorString = new OfferGenerator(this.initialData);
     const tsvFileWriter = new TSVFileWriter(filepath);
