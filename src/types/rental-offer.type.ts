@@ -8,6 +8,7 @@ export type RentalOffer = {
   description: string;
   publicationDate: string;
   city: string;
+  coordinates: CityCoordinates;
   previewImage: string;
   images: string[];
   isPremium: boolean;
@@ -19,6 +20,4 @@ export type RentalOffer = {
   price: number;
   amenities: Amenities[];
   author: User;
-  commentsCount: number;
-  coordinates: CityCoordinates;
 };
