@@ -1,11 +1,15 @@
+import { inject, injectable } from 'inversify';
+
 import type { ConfigInterface } from '../core/config/config.interface.js';
 import type { LoggerInterface } from '../core/logger/logger.interface.js';
 import { RestSchema } from '../core/config/rest.schema.js';
+import { AppComponent } from '../types/app-component.enum.js';
 
+@injectable()
 export default class RestApplication {
   constructor(
-    private readonly logger: LoggerInterface,
-    private readonly config: ConfigInterface<RestSchema>,
+    @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface,
+    @inject(AppComponent.ConfigInterface) private readonly config: ConfigInterface<RestSchema>,
   ) {}
 
   public async init() {
