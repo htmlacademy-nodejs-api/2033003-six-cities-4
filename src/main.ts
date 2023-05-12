@@ -1,6 +1,10 @@
+import { Container } from 'inversify';
+
+import RestApplication from './app/rest.js';
 import PinoService from './core/logger/pino.service.js';
 import ConfigService from './core/config/config.service.js';
 import { RestSchema } from './core/config/rest.schema.js';
+import { AppComponent } from './types/app-component.enum.js';
 import type { LoggerInterface } from './core/logger/logger.interface.js';
 import type { ConfigInterface } from './core/config/config.interface.js';
 
