@@ -11,9 +11,9 @@ import type { ConfigInterface } from './core/config/config.interface.js';
 
 async function bootstrap() {
   const container = new Container();
-  container.bind<RestApplication>(AppComponent.RestApplication).to(RestApplication);
-  container.bind<LoggerInterface>(AppComponent.LoggerInterface).to(PinoService);
-  container.bind<ConfigInterface<RestSchema>>(AppComponent.ConfigInterface).to(ConfigService);
+  container.bind<RestApplication>(AppComponent.RestApplication).to(RestApplication).inSingletonScope();
+  container.bind<LoggerInterface>(AppComponent.LoggerInterface).to(PinoService).inSingletonScope();
+  container.bind<ConfigInterface<RestSchema>>(AppComponent.ConfigInterface).to(ConfigService).inSingletonScope();
 
   const application = container.get<RestApplication>(AppComponent.RestApplication);
   await application.init();
