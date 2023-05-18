@@ -4,6 +4,7 @@ export type User = {
   name: string;
   email: string;
   avatar?: string;
-  password: string;
   userType: UserType;
+  getPassword(): string;
+  setPassword(password: string, salt: string): void;
 };
