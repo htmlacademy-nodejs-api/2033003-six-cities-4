@@ -36,19 +36,19 @@ export const configRestSchema = convict<RestSchema>({
     doc: 'Username to connect to the database',
     format: String,
     env: 'DB_USER',
-    default: null
+    default: null,
   },
   DB_PASSWORD: {
     doc: 'Password to connect to the database',
     format: String,
     env: 'DB_PASSWORD',
-    default: null
+    default: null,
   },
   DB_PORT: {
-    doc: 'Port to connect to the database',
+    doc: 'Port to connect to the database (MongoDB)',
     format: 'port',
     env: 'DB_PORT',
-    default: '27017'
+    default: '27017',
   },
   DB_NAME: {
     doc: 'Database name (MongoDB)',
