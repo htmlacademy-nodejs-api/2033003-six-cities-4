@@ -26,6 +26,7 @@ export default class RestApplication {
 
     return this.databaseClient.connect(mongoUri);
   }
+
   public async init() {
     this.logger.info('Application initialization…');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
