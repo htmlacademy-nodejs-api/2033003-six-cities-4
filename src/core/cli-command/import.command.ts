@@ -1,21 +1,42 @@
 import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from '../../const.js';
-import { UserServiceInterface } from '../../modules/user/user-service.interface.js';
-import { UserModel } from '../../modules/user/user.entity.js';
-import UserService from '../../modules/user/user.service.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
-import MongoClientService from '../database-client/database-client.service.js';
-import { DatabaseClientInterface } from '../database-client/mongo-client.interface.js';
-import TSVFileReader from '../file-reader/tsv-file-reader.js';
 import { getErrorMessage } from '../helpers/common.js';
 import { getMongoURI } from '../helpers/db.js';
 import { createOffer } from '../helpers/offers.js';
+import TSVFileReader from '../file-reader/tsv-file-reader.js';
+import MongoClientService from '../database-client/database-client.service.js';
+import type { DatabaseClientInterface } from '../database-client/mongo-client.interface.js';
 import ConsoleLoggerService from '../logger/console.service.js';
-import { LoggerInterface } from '../logger/logger.interface.js';
+import type { LoggerInterface } from '../logger/logger.interface.js';
 import type { CliCommandInterface } from './cli-command.interface.js';
+
+import { AmenityModel } from '../../modules/amenity/amenity.entity.js';
+import type { AmenityServiceInterface } from '../../modules/amenity/amenity-service.interface.js';
+import AmenityService from '../../modules/amenity/amenity.service.js';
+
+import { CityModel } from '../../modules/city/city.entity.js';
+import type { CityServiceInterface } from '../../modules/city/city-service.interface.js';
+import CityService from '../../modules/city/city.service.js';
+
+import { TypeOfRentalModel } from './../../modules/type-of-rental/type-of-rental.entity';
+import type { TypeOfRentalServiceInterface } from './../../modules/type-of-rental/type-of-rental-service.interface';
+import TypeOfRentalService from '../../modules/type-of-rental/type-of-rental.service.js';
+
+import { TypeOfUserModel } from '../../modules/type-of-user/type-of-user.entity';
+import type { TypeOfUserServiceInterface } from '../../modules/type-of-user/type-of-user-service.interface';
+import TypeOfUserService from '../../modules/type-of-user/type-of-user.service';
+
+import { UserModel } from '../../modules/user/user.entity.js';
+import type { UserServiceInterface } from '../../modules/user/user-service.interface.js';
+import UserService from '../../modules/user/user.service.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
   private userService!: UserServiceInterface;
+  private amenityService!: AmenityServiceInterface;
+  private cityService!: CityServiceInterface;
+  private typeOfRentalService!: TypeOfRentalServiceInterface;
+  private typeOfUserService!: TypeOfUserServiceInterface;
   //private offerService!: OfferServiceInterface;
   private databaseService!: DatabaseClientInterface;
   private logger: LoggerInterface;
@@ -26,8 +47,11 @@ export default class ImportCommand implements CliCommandInterface {
     this.onComplete = this.onComplete.bind(this);
 
     this.logger = new ConsoleLoggerService();
-    //this.offerService = new OfferService(this.logger, OfferModel);
     this.userService = new UserService(this.logger, UserModel);
+    this.amenityService = new AmenityService(this.logger, AmenityModel);
+    this.cityService = new CityService(this.logger, CityModel);
+    this.typeOfRentalService = new TypeOfRentalService(this.logger, TypeOfRentalModel);
+    this.typeOfUserService = new TypeOfUserService(this.logger, TypeOfUserModel);
     this.databaseService = new MongoClientService(this.logger);
   }
 

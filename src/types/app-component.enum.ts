@@ -7,4 +7,10 @@ export const AppComponent = {
   UserModel: Symbol.for('UserModel'),
   AmenityServiceInterface: Symbol.for('AmenityServiceInterface'),
   AmenityModel: Symbol.for('AmenityModel'),
+  CityServiceInterface: Symbol.for('CityServiceInterface'),
+  CityModel: Symbol.for('CityModel'),
+  TypeOfRentalServiceInterface: Symbol.for('TypeOfRentalServiceInterface'),
+  TypeOfRentalModel: Symbol.for('TypeOfRentalModel'),
+  TypeOfUserServiceInterface: Symbol.for('TypeOfUserServiceInterface'),
+  TypeOfUserModel: Symbol.for('TypeOfUserModel'),
 } as const;
