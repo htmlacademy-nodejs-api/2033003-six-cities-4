@@ -32,3 +32,6 @@ export const CHUNK_SIZE_WRITER = 2 ** 16;
 
 export const RETRY_COUNT = 5;
 export const RETRY_TIMEOUT = 1000;
+
+export const DEFAULT_DB_PORT = '27017';
+export const DEFAULT_USER_PASSWORD = '123456';
