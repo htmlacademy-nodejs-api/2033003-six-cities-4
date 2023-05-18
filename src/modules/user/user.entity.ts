@@ -1,4 +1,4 @@
-import typegoose, { getModelForClass } from '@typegoose/typegoose';
+import typegoose, { defaultClasses, getModelForClass } from '@typegoose/typegoose';
 import { IsEmail, IsEnum, Length } from 'class-validator';
 
 import { UserType } from '../../types/user-type.enum.js';
@@ -6,7 +6,7 @@ import type { User } from '../../types/user.type.js';
 
 const { prop } = typegoose;
 
-export class UserEntity implements User {
+export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true, minlength: 1, maxlength: 15 })
   @Length(1, 15)
   public name = '';
