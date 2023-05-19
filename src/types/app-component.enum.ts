@@ -13,4 +13,6 @@ export const AppComponent = {
   TypeOfRentalModel: Symbol.for('TypeOfRentalModel'),
   TypeOfUserServiceInterface: Symbol.for('TypeOfUserServiceInterface'),
   TypeOfUserModel: Symbol.for('TypeOfUserModel'),
+  OfferServiceInterface: Symbol.for('OfferServiceInterface'),
+  OfferModel: Symbol.for('OfferModel'),
 } as const;

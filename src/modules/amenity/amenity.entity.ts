@@ -1,9 +1,9 @@
 import { defaultClasses } from '@typegoose/typegoose';
-import typegoose, {getModelForClass} from '@typegoose/typegoose';
+import typegoose from '@typegoose/typegoose';
 
 import type { Amenity } from '../../types/amenity.type.js';
 
-const {prop, modelOptions} = typegoose;
+const {prop, modelOptions, getModelForClass} = typegoose;
 
 export interface AmenityEntity extends defaultClasses.Base {}
 

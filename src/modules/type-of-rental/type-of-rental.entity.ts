@@ -1,9 +1,9 @@
 import { defaultClasses } from '@typegoose/typegoose';
-import typegoose, {getModelForClass} from '@typegoose/typegoose';
+import typegoose from '@typegoose/typegoose';
 
 import { TypeOfRental } from '../../types/type-of-rental.js';
 
-const {prop, modelOptions} = typegoose;
+const {prop, modelOptions, getModelForClass} = typegoose;
 
 export interface TypeOfRentalEntity extends defaultClasses.Base {}
 

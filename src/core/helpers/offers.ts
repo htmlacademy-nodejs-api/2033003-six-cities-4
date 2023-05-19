@@ -1,4 +1,7 @@
+import { CityCoordinates } from '../../types/city-coordinates.type.js';
 import type { RentalOffer } from '../../types/rental-offer.type.js';
+import { UserType } from '../../types/user-type.enum.js';
+import { User } from '../../types/user.type.js';
 
 export function createOffer(offerData: string): RentalOffer {
   const [
@@ -20,20 +23,29 @@ export function createOffer(offerData: string): RentalOffer {
     amenities,
     name,
     email,
-    avatarUrl,
+    avatar,
     password,
     userType,
+    commentCount
   ] = offerData.replace('\n', '').split('\t');
 
-  const author = {
+  let userTypeValue: UserType;
+
+  if (userType === UserType.Base || userType === UserType.Pro) {
+    userTypeValue = userType as UserType;
+  } else {
+    userTypeValue = UserType.Base;
+  }
+
+  const author: User = {
     name,
     email,
-    avatarUrl,
+    avatar,
     password,
-    userType
+    userType: userTypeValue,
   };
 
-  const coordinates = {
+  const coordinates: CityCoordinates = {
     longitude: parseInt(longitude, 10),
     latitude: parseInt(latitude, 10),
   };
@@ -54,6 +66,7 @@ export function createOffer(offerData: string): RentalOffer {
     guests: parseInt(guests, 10),
     price: parseFloat(price),
     amenities: amenities.split(';'),
-    author
+    author,
+    commentCount: parseInt(commentCount, 10)
   } as RentalOffer;
 }

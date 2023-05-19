@@ -1,4 +1,4 @@
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from '../../const.js';
+import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD, cityCoordinates } from '../../const.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
 import { getErrorMessage } from '../helpers/common.js';
 import { getMongoURI } from '../helpers/db.js';
@@ -29,6 +29,9 @@ import TypeOfUserService from '../../modules/type-of-user/type-of-user.service';
 import { UserModel } from '../../modules/user/user.entity.js';
 import type { UserServiceInterface } from '../../modules/user/user-service.interface.js';
 import UserService from '../../modules/user/user.service.js';
+import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';
+import OfferService from '../../modules/offer/offer.service.js';
+import { OfferModel } from '../../modules/offer/offer.entity.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
@@ -37,7 +40,7 @@ export default class ImportCommand implements CliCommandInterface {
   private cityService!: CityServiceInterface;
   private typeOfRentalService!: TypeOfRentalServiceInterface;
   private typeOfUserService!: TypeOfUserServiceInterface;
-  //private offerService!: OfferServiceInterface;
+  private offerService!: OfferServiceInterface;
   private databaseService!: DatabaseClientInterface;
   private logger: LoggerInterface;
   private salt!: string;
@@ -52,25 +55,23 @@ export default class ImportCommand implements CliCommandInterface {
     this.cityService = new CityService(this.logger, CityModel);
     this.typeOfRentalService = new TypeOfRentalService(this.logger, TypeOfRentalModel);
     this.typeOfUserService = new TypeOfUserService(this.logger, TypeOfUserModel);
+    this.offerService = new OfferService(this.logger, OfferModel);
     this.databaseService = new MongoClientService(this.logger);
   }
 
   private async saveOffer(offer: RentalOffer) {
-    const categories = [];
+
     const user = await this.userService.findOrCreate({
-      ...offer.user,
+      ...offer.author,
       password: DEFAULT_USER_PASSWORD
     }, this.salt);
 
-    for (const {name} of offer.categories) {
-      const existCategory = await this.categoryService.findByCategoryNameOrCreate(name, {name});
-      categories.push(existCategory.id);
-    }
+    const coordinates = cityCoordinates[offer.city];
 
     await this.offerService.create({
       ...offer,
-      categories,
-      userId: user.id,
+      coordinates,
+      authorId: user.id,
     });
   }
 
