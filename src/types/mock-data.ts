@@ -22,4 +22,5 @@ export type MockData = {
     latitude: string;
     longitude: string;
   }
+  commentCount: number;
 };

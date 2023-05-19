@@ -5,11 +5,7 @@ import { Amenities } from '../../types/amenities.enum.js';
 import { RentalType } from '../../types/rental-type.enum.js';
 import { City } from '../../types/city.enum.js';
 import { UserEntity } from '../user/user.entity.js';
-
-export type CityCoordinates = {
-  latitude: number;
-  longitude: number;
-};
+import { CityCoordinates } from '../../types/city-coordinates.type.js';
 
 const {prop, modelOptions, getModelForClass} = typegoose;
 
@@ -33,7 +29,7 @@ export class OfferEntity extends defaultClasses.TimeStamps{
   @prop({ type: () => String, enum: City })
   public city!: City;
 
-  @prop({ required: true, type: () => CityCoordinates })
+  @prop({ required: true, type: () => Number })
   public coordinates!: CityCoordinates;
 
   @prop({ required: true })

@@ -26,12 +26,14 @@ export default class OfferGenerator implements OfferGeneratorInterface {
     const amenities = getRandomItems<string>(this.mockData.amenities).join(';');
     const author = objectToString(getRandomItem(this.mockData.authors));
     const coordinates = objectToString(randomCoordinates());
+    const commentCount = 0;
 
     return [
       title, description, publicationDate,
       city, coordinates, previewImage, images,isPremium,
       isFavorite, rating, type, rooms, guests,
-      price, amenities, author
+      price, amenities, author, 
+      commentCount
     ].join('\t');
   }
 }

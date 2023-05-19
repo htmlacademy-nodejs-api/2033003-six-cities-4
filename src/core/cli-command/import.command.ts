@@ -10,36 +10,17 @@ import ConsoleLoggerService from '../logger/console.service.js';
 import type { LoggerInterface } from '../logger/logger.interface.js';
 import type { CliCommandInterface } from './cli-command.interface.js';
 
-import { AmenityModel } from '../../modules/amenity/amenity.entity.js';
-import type { AmenityServiceInterface } from '../../modules/amenity/amenity-service.interface.js';
-import AmenityService from '../../modules/amenity/amenity.service.js';
-
-import { CityModel } from '../../modules/city/city.entity.js';
-import type { CityServiceInterface } from '../../modules/city/city-service.interface.js';
-import CityService from '../../modules/city/city.service.js';
-
-import { TypeOfRentalModel } from './../../modules/type-of-rental/type-of-rental.entity';
-import type { TypeOfRentalServiceInterface } from './../../modules/type-of-rental/type-of-rental-service.interface';
-import TypeOfRentalService from '../../modules/type-of-rental/type-of-rental.service.js';
-
-import { TypeOfUserModel } from '../../modules/type-of-user/type-of-user.entity';
-import type { TypeOfUserServiceInterface } from '../../modules/type-of-user/type-of-user-service.interface';
-import TypeOfUserService from '../../modules/type-of-user/type-of-user.service';
-
 import { UserModel } from '../../modules/user/user.entity.js';
 import type { UserServiceInterface } from '../../modules/user/user-service.interface.js';
 import UserService from '../../modules/user/user.service.js';
 import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';
 import OfferService from '../../modules/offer/offer.service.js';
 import { OfferModel } from '../../modules/offer/offer.entity.js';
+import { CityCoordinates } from '../../types/city-coordinates.type.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
   private userService!: UserServiceInterface;
-  private amenityService!: AmenityServiceInterface;
-  private cityService!: CityServiceInterface;
-  private typeOfRentalService!: TypeOfRentalServiceInterface;
-  private typeOfUserService!: TypeOfUserServiceInterface;
   private offerService!: OfferServiceInterface;
   private databaseService!: DatabaseClientInterface;
   private logger: LoggerInterface;
@@ -51,10 +32,6 @@ export default class ImportCommand implements CliCommandInterface {
 
     this.logger = new ConsoleLoggerService();
     this.userService = new UserService(this.logger, UserModel);
-    this.amenityService = new AmenityService(this.logger, AmenityModel);
-    this.cityService = new CityService(this.logger, CityModel);
-    this.typeOfRentalService = new TypeOfRentalService(this.logger, TypeOfRentalModel);
-    this.typeOfUserService = new TypeOfUserService(this.logger, TypeOfUserModel);
     this.offerService = new OfferService(this.logger, OfferModel);
     this.databaseService = new MongoClientService(this.logger);
   }
@@ -66,7 +43,7 @@ export default class ImportCommand implements CliCommandInterface {
       password: DEFAULT_USER_PASSWORD
     }, this.salt);
 
-    const coordinates = cityCoordinates[offer.city];
+    const coordinates: CityCoordinates = cityCoordinates[offer.city];
 
     await this.offerService.create({
       ...offer,

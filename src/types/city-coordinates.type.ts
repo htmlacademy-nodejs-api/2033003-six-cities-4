@@ -1,4 +1,4 @@
-// export type CityCoordinates = {
-//   latitude: number;
-//   longitude: number;
-// };
+export type CityCoordinates = {
+  latitude: number;
+  longitude: number;
+};
