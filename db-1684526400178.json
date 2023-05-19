@@ -36,11 +36,31 @@
       "hamburg-villa.jpg"
     ],
     "images": [
-      ["https://paris-apartment1.jpg", "https://paris-apartment2.jpg", "https://paris-apartment3.jpg"],
-      ["https://amsterdam-house1.jpg", "https://amsterdam-house2.jpg", "https://amsterdam-house3.jpg"],
-      ["https://cologne-room1.jpg", "https://cologne-room2.jpg", "https://cologne-room3.jpg"],
-      ["https://brussels-hotel1.jpg", "https://brussels-hotel2.jpg", "https://brussels-hotel3.jpg"],
-      ["https://hamburg-villa1.jpg", "https://hamburg-villa2.jpg", "https://hamburg-villa3.jpg"]
+      [
+        "https://paris-apartment1.jpg",
+        "https://paris-apartment2.jpg",
+        "https://paris-apartment3.jpg"
+      ],
+      [
+        "https://amsterdam-house1.jpg",
+        "https://amsterdam-house2.jpg",
+        "https://amsterdam-house3.jpg"
+      ],
+      [
+        "https://cologne-room1.jpg",
+        "https://cologne-room2.jpg",
+        "https://cologne-room3.jpg"
+      ],
+      [
+        "https://brussels-hotel1.jpg",
+        "https://brussels-hotel2.jpg",
+        "https://brussels-hotel3.jpg"
+      ],
+      [
+        "https://hamburg-villa1.jpg",
+        "https://hamburg-villa2.jpg",
+        "https://hamburg-villa3.jpg"
+      ]
     ],
     "isPremium": [
       true,
@@ -55,7 +75,8 @@
       true,
       false,
       true
-    ],"ratings": [
+    ],
+    "ratings": [
       4.5,
       4.7,
       4.3,
@@ -80,8 +101,8 @@
       6,
       8,
       2,
-      5,
-      7
+      10,
+      12
     ],
     "prices": [
       5000,
@@ -133,6 +154,28 @@
         "avatar": "https://ekaterina-avatar.jpg",
         "password": "password5",
         "userType": "обычный"
+      }
+    ],
+    "coordinates": [
+      {
+        "latitude": 48.85661,
+        "longitude": 2.351499
+      },
+      {
+        "latitude": 52.370216,
+        "longitude": 4.895168
+      },
+      {
+        "latitude": 50.938361,
+        "longitude": 6.959974
+      },
+      {
+        "latitude": 50.846557,
+        "longitude": 4.351697
+      },
+      {
+        "latitude": 53.550341,
+        "longitude": 10.000654
       }
     ]
   }
