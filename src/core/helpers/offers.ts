@@ -1,7 +1,6 @@
 import { CityCoordinates } from '../../types/city-coordinates.type.js';
 import type { RentalOffer } from '../../types/rental-offer.type.js';
 import { UserType } from '../../types/user-type.enum.js';
-import { User } from '../../types/user.type.js';
 
 export function createOffer(offerData: string): RentalOffer {
   const [
@@ -37,7 +36,7 @@ export function createOffer(offerData: string): RentalOffer {
     userTypeValue = UserType.Base;
   }
 
-  const author: User = {
+  const author = {
     name,
     email,
     avatar,

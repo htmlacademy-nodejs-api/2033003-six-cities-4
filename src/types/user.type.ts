@@ -5,5 +5,4 @@ export type User = {
   email: string;
   avatar?: string | undefined;
   userType: UserType;
-  password: string;
 };
