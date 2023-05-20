@@ -4,7 +4,7 @@ import { UserType } from '../../types/user-type.enum.js';
 import type { User } from '../../types/user.type.js';
 import { createSHA256 } from '../../core/helpers/index.js';
 import CreateUserDto from './dto/create-user.dto.js';
-import { MAX_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, MIN_LENGTH_USERNAME } from '../../const.js';
+import { MAX_LENGTH_PASSWORD, MAX_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, MIN_LENGTH_USERNAME } from '../../const.js';
 
 const { prop, modelOptions, getModelForClass } = typegoose;
 
@@ -26,7 +26,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: false, default: '' })
   public avatar?:string;
 
-  @prop({ required: true, minlength: MIN_LENGTH_PASSWORD })
+  @prop({ required: true, minlength: MIN_LENGTH_PASSWORD, maxlength: MAX_LENGTH_PASSWORD })
   private password?: string;
 
   @prop({ required: true, enum: UserType })
