@@ -49,3 +49,6 @@ export const MIN_LENGTH_USERNAME = 1;
 export const MAX_LENGTH_USERNAME = 15;
 
 export const COMMENT_COUNT = 0;
+
+export const MIN_LENGTH_COMMENT_TEXT= 5;
+export const MAX_LENGTH_COMMENT_TEXT = 1024;
