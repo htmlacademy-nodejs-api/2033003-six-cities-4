@@ -6,7 +6,7 @@ import { UserType } from '../../types/user-type.enum.js';
 import type { User } from '../../types/user.type.js';
 import { createSHA256 } from '../../core/helpers/index.js';
 import CreateUserDto from './dto/create-user.dto.js';
-import { MAX_LENGTH_PASSWORD, MAX_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, MIN_LENGTH_USERNAME } from '../../const.js';
+import { MAX_LENGTH_PASSWORD, MAX_LENGTH_USERNAME, MIN_LENGTH_PASSWORD, MIN_LENGTH_USERNAME } from './user.const.js';
 
 const { prop, modelOptions, getModelForClass } = typegoose;
 

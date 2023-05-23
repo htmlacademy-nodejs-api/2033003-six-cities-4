@@ -1,4 +1,4 @@
-import { MAX_OFFER_RATING, MIN_OFFER_RATING } from '../../const.js';
+import { MAX_OFFER_RATING, MIN_OFFER_RATING } from '../../modules/offer/offer.const.js';
 
 export function generateRandomValue(min:number, max: number, numAfterDigit = 0) {
   return +((Math.random() * (max - min)) + min).toFixed(numAfterDigit);

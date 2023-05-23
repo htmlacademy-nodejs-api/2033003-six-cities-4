@@ -7,8 +7,7 @@ import { RentalType } from '../../types/rental-type.enum.js';
 import { City } from '../../types/city.enum.js';
 import { UserEntity } from '../user/user.entity.js';
 import { CityCoordinates } from '../../types/city-coordinates.type.js';
-import { MAX_COUNT_OFFER_ROOMS, MAX_OFFER_RATING, MIN_COUNT_OFFER_GUESTS, MIN_COUNT_OFFER_ROOMS, MIN_OFFER_RATING, MAX_COUNT_OFFER_GUESTS, MIN_OFFER_PRICE, MAX_OFFER_PRICE, MIN_LENGTH_OFFER_TITLE, MAX_LENGTH_OFFER_TITLE, MIN_LENGTH_OFFER_DESCRIPTION, MAX_LENGTH_OFFER_DESCRIPTION } from './../../const.js';
-
+import { MAX_COUNT_OFFER_GUESTS, MAX_COUNT_OFFER_ROOMS, MAX_LENGTH_OFFER_DESCRIPTION, MAX_LENGTH_OFFER_TITLE, MAX_OFFER_PRICE, MAX_OFFER_RATING, MIN_COUNT_OFFER_GUESTS, MIN_COUNT_OFFER_ROOMS, MIN_LENGTH_OFFER_DESCRIPTION, MIN_LENGTH_OFFER_TITLE, MIN_OFFER_PRICE, MIN_OFFER_RATING } from './offer.const.js';
 
 const {prop, modelOptions, getModelForClass} = typegoose;
 

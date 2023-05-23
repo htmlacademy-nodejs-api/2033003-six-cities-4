@@ -2,7 +2,7 @@ import typegoose, { defaultClasses, getModelForClass, Ref } from '@typegoose/typ
 
 import { OfferEntity } from '../offer/offer.entity.js';
 import { UserEntity } from '../user/user.entity.js';
-import { MAX_LENGTH_COMMENT_TEXT, MAX_OFFER_RATING, MIN_LENGTH_COMMENT_TEXT, MIN_OFFER_RATING } from '../../const.js';
+import { MAX_COMMENT_RATING, MAX_LENGTH_COMMENT_TEXT, MIN_COMMENT_RATING, MIN_LENGTH_COMMENT_TEXT } from './comment.const.js';
 
 const { prop, modelOptions } = typegoose;
 
@@ -23,8 +23,8 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   public text!: string;
 
   @prop({
-    min: MIN_OFFER_RATING,
-    max: MAX_OFFER_RATING,
+    min: MIN_COMMENT_RATING,
+    max: MAX_COMMENT_RATING,
     required: true
   })
   public rating!: number;

@@ -6,7 +6,7 @@ import mongoose, { Mongoose } from 'mongoose';
 import { AppComponent } from '../../types/app-component.enum.js';
 import type { DatabaseClientInterface } from './mongo-client.interface.js';
 import type { LoggerInterface } from '../logger/logger.interface.js';
-import { RETRY_COUNT, RETRY_TIMEOUT } from '../../const.js';
+import { RETRY_COUNT, RETRY_TIMEOUT } from './database-client.const.js';
 
 @injectable()
 export default class MongoClientService implements DatabaseClientInterface {

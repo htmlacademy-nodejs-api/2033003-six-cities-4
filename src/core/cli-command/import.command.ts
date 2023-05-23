@@ -1,4 +1,3 @@
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD, cityCoordinates } from '../../const.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
 import { getErrorMessage } from '../helpers/common.js';
 import { getMongoURI } from '../helpers/db.js';
@@ -17,6 +16,8 @@ import { OfferServiceInterface } from '../../modules/offer/offer-service.interfa
 import OfferService from '../../modules/offer/offer.service.js';
 import { OfferModel } from '../../modules/offer/offer.entity.js';
 import { CityCoordinates } from '../../types/city-coordinates.type.js';
+import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './import.command.const.js';
+import { cityCoordinates } from '../../const.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
