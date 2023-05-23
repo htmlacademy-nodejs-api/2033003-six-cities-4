@@ -17,12 +17,12 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({
     trim: true,
     required: true,
-    min: MIN_LENGTH_COMMENT_TEXT,
-    max: MAX_LENGTH_COMMENT_TEXT
+    minlength: MIN_LENGTH_COMMENT_TEXT,
+    maxlength: MAX_LENGTH_COMMENT_TEXT
   })
   public text!: string;
 
-  @prop({ 
+  @prop({
     min: MIN_OFFER_RATING,
     max: MAX_OFFER_RATING,
     required: true
