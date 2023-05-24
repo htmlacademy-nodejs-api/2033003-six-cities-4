@@ -17,25 +17,37 @@ export default class MongoClientService implements DatabaseClientInterface {
     @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface
   ) {}
 
-  private async _connectWithRetry(uri: string): Promise<Mongoose> {
+  private _connectWithRetry(uri: string): Promise<Mongoose> {
     let attempt = 0;
-    while (attempt < RETRY_COUNT) {
-      try {
-        return await mongoose.connect(uri);
-      } catch (error) {
-        attempt++;
-        this.logger.error(`Failed to connect to the database. Attempt ${attempt}`);
-        await setTimeout(RETRY_TIMEOUT);
-      }
-    }
 
-    this.logger.error(`Unable to establish database connection after ${attempt}`);
-    throw new Error('Failed to connect to the database');
+    const tryConnect = (): Promise<Mongoose> => {
+      if (attempt >= RETRY_COUNT) {
+        this.logger.error(`Unable to establish database connection after ${attempt} attempts.`);
+        throw new Error('Failed to connect to the database');
+      }
+
+      return mongoose.connect(uri)
+        .catch(async () => {
+          attempt++;
+          this.logger.error(`Failed to connect to the database. Attempt ${attempt}`);
+          await setTimeout(RETRY_TIMEOUT);
+          return tryConnect();
+        });
+    };
+
+    return tryConnect();
   }
 
   private async _connect(uri:string): Promise<void> {
-    this.mongooseInstance = await this._connectWithRetry(uri);
-    this.isConnected = true;
+    return this._connectWithRetry(uri)
+      .then((mongooseInstance) => {
+        this.mongooseInstance = mongooseInstance;
+        this.isConnected = true;
+      })
+      .catch((error) => {
+        this.logger.error('Failed to connect to the database in _connect function');
+        throw error;
+      });
   }
 
   private async _disconnect(): Promise<void> {
@@ -46,7 +58,8 @@ export default class MongoClientService implements DatabaseClientInterface {
 
   public async connect(uri: string): Promise<void> {
     if (this.isConnected) {
-      throw new Error('MongoDB client already connected');
+      this.logger.info('MongoDB client already connected, reusing the connection.');
+      return;
     }
 
     this.logger.info('Trying to connect to MongoDB…');

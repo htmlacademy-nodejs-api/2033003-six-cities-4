@@ -16,8 +16,9 @@ import { OfferServiceInterface } from '../../modules/offer/offer-service.interfa
 import OfferService from '../../modules/offer/offer.service.js';
 import { OfferModel } from '../../modules/offer/offer.entity.js';
 import { CityCoordinates } from '../../types/city-coordinates.type.js';
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './import.command.const.js';
+import { DEFAULT_USER_PASSWORD } from './import.command.const.js';
 import { cityCoordinates } from '../../const.js';
+import ConfigService from '../config/config.service.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
@@ -25,6 +26,7 @@ export default class ImportCommand implements CliCommandInterface {
   private offerService!: OfferServiceInterface;
   private databaseService!: DatabaseClientInterface;
   private logger: LoggerInterface;
+  private configService: ConfigService;
   private salt!: string;
 
   constructor() {
@@ -32,6 +34,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.onComplete = this.onComplete.bind(this);
 
     this.logger = new ConsoleLoggerService();
+    this.configService = new ConfigService(this.logger);
     this.userService = new UserService(this.logger, UserModel);
     this.offerService = new OfferService(this.logger, OfferModel);
     this.databaseService = new MongoClientService(this.logger);
@@ -65,7 +68,8 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
-    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    const defaulDbPort = this.configService.get('DB_PORT');
+    const uri = getMongoURI(login, password, host, defaulDbPort, dbname);
     this.salt = salt;
 
     await this.databaseService.connect(uri);

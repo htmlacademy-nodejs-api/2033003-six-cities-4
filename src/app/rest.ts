@@ -17,8 +17,8 @@ export default class RestApplication {
 
   private async _initDb() {
     const mongoUri = getMongoURI(
-      this.config.get('DB_USER'),
-      this.config.get('DB_PASSWORD'),
+      this.config.get('MONGO_INITDB_ROOT_USERNAME'),
+      this.config.get('MONGO_INITDB_ROOT_PASSWORD'),
       this.config.get('DB_HOST'),
       this.config.get('DB_PORT'),
       this.config.get('DB_NAME'),
@@ -31,7 +31,11 @@ export default class RestApplication {
     this.logger.info('Application initialization…');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
     this.logger.info('Init database…');
-    await this._initDb();
+
+    await this._initDb().catch((error) => {
+      this.logger.error(`Error during database initialization: ${error.message}`);
+    });
+
     this.logger.info('Init database completed');
   }
 }

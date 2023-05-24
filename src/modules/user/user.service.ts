@@ -6,6 +6,7 @@ import { UserEntity } from './user.entity.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import type {UserServiceInterface} from './user-service.interface.js';
 import type { LoggerInterface } from '../../core/logger/logger.interface.js';
+import { MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from './user.const.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -16,6 +17,11 @@ export default class UserService implements UserServiceInterface {
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
+
+    if (dto.password.length < MIN_LENGTH_PASSWORD || dto.password.length > MAX_LENGTH_PASSWORD) {
+      throw new Error(`Password should be between ${MIN_LENGTH_PASSWORD} and ${MAX_LENGTH_PASSWORD} characters.`);
+    }
+
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
