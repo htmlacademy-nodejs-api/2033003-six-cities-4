@@ -3,7 +3,7 @@ import { createWriteStream } from 'node:fs';
 import EventEmitter from 'node:events';
 
 import type { FileWriterInterface } from './file-writer.interface.js';
-import { CHUNK_SIZE_WRITER } from '../../const.js';
+import { CHUNK_SIZE_WRITER } from './file-writer.const.js';
 
 export default class TSVFileWriter implements FileWriterInterface {
   private stream: WriteStream;

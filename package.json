@@ -19,6 +19,7 @@
     "start:dev": "npm run ts ./src/main.ts | pino-pretty --colorize --translateTime SYS:standard"
   },
   "devDependencies": {
+    "@typegoose/typegoose": "9.13.2",
     "@types/convict": "6.1.1",
     "@types/convict-format-with-validator": "6.0.2",
     "@types/node": "18.16.3",
@@ -45,6 +46,7 @@
     "dotenv": "16.0.3",
     "got": "12.6.0",
     "inversify": "6.0.1",
+    "mongoose": "6.7.2",
     "pino": "8.7.0",
     "reflect-metadata": "0.1.13"
   }

@@ -1,11 +1,11 @@
-import type { CityCoordinates } from '../../types/city-coordinates.type.js';
+import { MAX_OFFER_RATING, MIN_OFFER_RATING } from '../../modules/offer/offer.const.js';
 
 export function generateRandomValue(min:number, max: number, numAfterDigit = 0) {
   return +((Math.random() * (max - min)) + min).toFixed(numAfterDigit);
 }
 
 export function getRandomItems<T>(items: T[]):T[] {
-  const startPosition = generateRandomValue(0, items.length - 1);
+  const startPosition = generateRandomValue(2, items.length - 1);
   const endPosition = startPosition + generateRandomValue(startPosition, items.length);
   return items.slice(startPosition, endPosition);
 }
@@ -19,17 +19,9 @@ export function getRandomBoolean(): boolean {
 }
 
 export function generateRating(): number {
-  const min = 1;
-  const max = 5;
   const precision = 1;
   const factor = Math.pow(10, precision);
-  return Math.floor(Math.random() * (max - min + 1) * factor) / factor + min;
-}
-
-export function randomCoordinates(): CityCoordinates {
-  const latitude = generateRandomValue(-90, 90, 6);
-  const longitude = generateRandomValue(-180, 180, 6);
-  return { latitude, longitude };
+  return Math.floor(Math.random() * (MAX_OFFER_RATING - MIN_OFFER_RATING + 1) * factor) / factor + MIN_OFFER_RATING;
 }
 
 export function getRandomImages(images: string[][]): string[] {

@@ -5,6 +5,8 @@ import type { CliCommandInterface } from './cli-command.interface.js';
 export default class HelpCommand implements CliCommandInterface {
   public readonly name = '--help';
 
+  //TODO: npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test localhost six-cities secret
+  //TODO: npm run ts ./src/main.cli.ts -- --generate 50 ./mocks/test-data.tsv http://localhost:3123/api изменить описание импорта
   public async execute(): Promise<void> {
     console.log(chalk.yellow(`
         Программа для подготовки данных для REST API сервера.
