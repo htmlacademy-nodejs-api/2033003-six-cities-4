@@ -102,6 +102,27 @@ paths:
         '401':
           description: Ошибка авторизации
 
+    get:
+      tags:
+        - offers
+      summary: Получение детальной информации по предложению
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Детальная информация по предложению
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '404':
+          description: Предложение с указанным идентификатором не найдено.
+
     delete:
       tags:
         - offers
