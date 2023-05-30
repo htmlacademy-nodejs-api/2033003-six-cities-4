@@ -1,0 +1,588 @@
+openapi: 3.1.0
+info:
+  title: API для проекта «Шесть городов»
+  description: «Шесть городов» — сервис для путешественников, не желающих переплачивать за аренду жилья. Выбирайте один из шести популярных городов для путешествий и получайте актуальный список предложений по аренде.
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+tags: 
+  - name: offers
+    description: Действия с объявлениями
+  - name: comments
+    description: Действия с комментариями
+  - name: users
+    description: Действия с пользователями
+
+paths:
+
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения
+      description: Создает новое предложение по аренде.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offer'
+      responses:
+        '200':
+          description: Успешное создание предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '401':
+          description: Ошибка авторизации
+
+    get:
+      tags:
+        - offers
+      summary: Получить список предложений по аренде
+      description: Возвращает список предложений по аренде.
+      parameters:
+        - name: limit
+          in: query
+          description: Количество предложений для возврата (не более 60)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 60
+        - name: sortByDate
+          in: query
+          description: Сортировка по дате публикации (по убыванию)
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Список предложений по аренде
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/returnedOffer'
+        '401':
+          description: Ошибка авторизации
+
+  /offers/{offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предложения
+      description: Редактирует предложение по аренде
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор редактируемого предложения
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offer'
+
+      responses:
+        '200':
+          description: Успешное обновление предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '401':
+          description: Ошибка авторизации
+
+    get:
+      tags:
+        - offers
+      summary: Получение детальной информации по предложению
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Детальная информация по предложению
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '404':
+          description: Предложение с указанным идентификатором не найдено.
+
+    delete:
+      tags:
+        - offers
+      summary: Удалить предложение по аренде
+      description: Удаляет предложение по аренде с указанным идентификатором.
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения по аренде
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Предложение успешно удалено
+        '401':
+          description: Ошибка авторизации
+
+  /offers/{offerId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Получить список комментариев для предложения
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос. Возвращается список комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+        '401':
+          description: Ошибка авторизации
+
+    post:
+      tags:
+        - comments
+      summary: Добавить комментарий к предложению
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commentInput'
+      responses:
+        '201':
+          description: Комментарий успешно добавлен. Возвращается информация о созданном комментарии.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        '401':
+          description: Ошибка авторизации
+
+  /offers/premium/{city}:
+    get:
+      tags:
+        - offers
+      summary: Получение премиальных предложений для города
+      parameters:
+        - in: path
+          name: city
+          description: Название города
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Список премиальных предложений для указанного города
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/returnedOffer'
+        '404':
+          description: Запрашиваемый город не найден.
+
+  /offers/favorites:
+    get:
+      tags:
+        - offers
+      summary: Получение списка избранных предложений
+      responses:
+        '200':
+          description: Список избранных предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/returnedOffer'
+        '401':
+          description: Требуется авторизация для доступа к избранным предложениям.
+
+  /offers/{offerId}/favorite:
+    put:
+      tags:
+        - offers
+      summary: Добавление предложения в избранное
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Предложение успешно добавлено в избранное
+        '401':
+          description: Требуется авторизация для добавления или удаления предложений из избранного.
+          
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения из избранного
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Предложение успешно удалено из избранного
+        '401':
+          description: Требуется авторизация для добавления или удаления предложений из избранного.
+
+  /users/register:
+    post: 
+      tags:
+        - users
+      summary: Регистрация нового пользователя
+      description: Регистрирует нового пользователя
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newUser'
+      responses:
+        '201':
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/regularUser'
+                  - $ref: '#/components/schemas/proUser'
+        '409':
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+      post:
+        tags:
+          - users
+        summary: Вход в закрытую часть приложения
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginRequest'
+        responses:
+          '200':
+            description: Успешная аутентификация. Возвращается токен.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/authToken'
+          '400':
+            description: Ошибка запроса. Некорректные данные при аутентификации.
+          '401':
+            description: Ошибка аутентификации. Неверный логин или пароль.
+      get:
+        tags:
+        - users
+        summary: Проверка состояния пользователя
+        responses:
+          '200':
+            description: Клиент авторизован. Возвращает информацию о пользователе.
+            content:
+              application/json:
+                schema:
+                  oneOf:
+                    - $ref: '#/components/schemas/regularUser'
+                    - $ref: '#/components/schemas/proUser'
+          '401':
+            description: 'Ошибка аутентификации. Токен не действителен или отсутствует.'
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Выход из закрытой части приложения
+      responses:
+        '200':
+          description: Успешное завершение сеанса пользователя.
+        '401':
+          description: Ошибка аутентификации. Токен не действителен или отсутствует.
+
+  /users/{userId}/avatar:
+    post: 
+      tags:
+        - users
+      summary: Загрузить изображение аватара
+      description: Загружает изображение аватара пользователя. Изображение аватара должно быть в формате `png` или `jpg`.
+
+components:
+  schemas:
+
+    newUser:
+      type: object
+
+      properties:
+        email: 
+          type: string
+          example: test@test.ru
+          format: email
+        name:
+          type: string
+          example: Александр Петров
+          minLength: 1
+          maxLength: 15
+        password:
+          type: string
+          example: 123456
+          minLength: 6
+          maxLength: 12
+
+    regularUser:
+      type: object 
+
+      properties:
+        id: 
+            type: string
+            example: fb3y84f738g4f3894v2g72gc27
+            format: uuid
+        email: 
+          type: string
+          example: test@test.ru
+          format: email
+        name:
+          type: string
+          example: Александр Петров
+        isPro: 
+          type: boolean
+          default: false
+        password:
+          type: string
+          example: 123456
+        avatar:
+          type: string
+          example: https://avatar.org/12
+          format: uri
+          nullable: true
+
+    proUser:
+      type: object 
+
+      properties:
+        id: 
+            type: string
+            example: fb3y84f738g4f3894v2g72gc27
+        email: 
+          type: string
+          example: test@test.ru
+        name:
+          type: string
+          example: Александр Петров
+        isPro: 
+          type: boolean
+          default: true
+        password:
+          type: string
+          example: 123456
+        avatar:
+          type: string
+          example: https://avatar.org/12
+          format: uri
+          nullable: true
+
+    offer:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        publicationDate:
+          type: string
+          format: date
+        city:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+        previewImage:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+          minItems: 6
+          maxItems: 6
+        isPremium:
+          type: boolean
+        isFavorite:
+          type: boolean
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+          multipleOf: 0.1
+        type:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+        rooms:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guests:
+          type: integer
+          minimum: 1
+          maximum: 10
+        price:
+          type: number
+          minimum: 100
+          maximum: 100000
+        amenities:
+          type: array
+          items:
+            type: string
+            enum:
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
+        commentCount:
+          type: integer
+        coordinates:
+          $ref: '#/components/schemas/coordinates'
+
+    returnedOffer:
+      type: object
+      properties:
+        price:
+          type: number
+        title:
+          type: string
+        type:
+          type: string
+        isFavorite:
+          type: boolean
+        publicationDate:
+          type: string
+          format: date-time
+        city:
+          type: string
+        previewImage:
+          type: string
+        isPremium:
+          type: boolean
+        rating:
+          type: number
+        commentCount:
+          type: number
+
+    coordinates:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+      required:
+        - latitude
+        - longitude
+
+    comment:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        publicationDate:
+          type: string
+          format: date-time
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        author:
+          oneOf:
+            - $ref: '#/components/schemas/regularUser'
+            - $ref: '#/components/schemas/proUser'
+
+    commentInput:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+
+    loginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          maxLength: 12
+
+    authToken:
+      type: object
+      properties:
+        token:
+          type: string
