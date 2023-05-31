@@ -9,7 +9,6 @@ import type { LoggerInterface } from '../../core/logger/logger.interface.js';
 import { MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from './user.const.js';
 import UpdateUserDto from './dto/update-user.dto.js';
 import type { MongoId } from '../../types/mongoId.type.js';
-import { comparePassword } from '../../core/helpers/common.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {

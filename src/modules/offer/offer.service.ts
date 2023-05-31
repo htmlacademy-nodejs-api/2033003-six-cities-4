@@ -37,7 +37,7 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  private async findOffers(query: any, count?: number): Promise<DocumentType<OfferEntity>[]> {
+  private async findOffers(query: object, count?: number): Promise<DocumentType<OfferEntity>[]> {
     const limit = count || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find(query)
@@ -46,16 +46,16 @@ export default class OfferService implements OfferServiceInterface {
       .limit(limit)
       .exec();
   }
-  
+
   public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
     return this.findOffers({}, count);
   }
-  
+
   public async getPremiumOffersForCity(city: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
     const query = { city: city, isPremium: true };
     return this.findOffers(query, count);
   }
-  
+
   public async getFavoriteOffers(count?: number): Promise<DocumentType<OfferEntity>[]> {
     const query = { isFavorite: true };
     return this.findOffers(query, count);
@@ -69,7 +69,7 @@ export default class OfferService implements OfferServiceInterface {
         { new: true }
       ).exec();
   }
-  
+
   public async removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findOneAndUpdate(
