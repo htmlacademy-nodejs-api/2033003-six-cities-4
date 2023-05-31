@@ -13,6 +13,11 @@ export const createSHA256 = (line: string, salt: string): string => {
   return shaHasher.update(line).digest('hex');
 };
 
+export const comparePassword = (password: string, hashedPassword: string, salt: string): boolean => {
+  const computedHash = createSHA256(password, salt);
+  return hashedPassword === computedHash;
+};
+
 export function getCoordinates(city: string): CityCoordinates {
   const cityEnum: City = City[city as keyof typeof City];
   if (cityEnum) {

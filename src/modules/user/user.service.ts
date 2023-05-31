@@ -7,6 +7,9 @@ import CreateUserDto from './dto/create-user.dto.js';
 import type {UserServiceInterface} from './user-service.interface.js';
 import type { LoggerInterface } from '../../core/logger/logger.interface.js';
 import { MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from './user.const.js';
+import UpdateUserDto from './dto/update-user.dto.js';
+import type { MongoId } from '../../types/mongoId.type.js';
+import { comparePassword } from '../../core/helpers/common.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -14,6 +17,12 @@ export default class UserService implements UserServiceInterface {
     @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface,
     @inject(AppComponent.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
+
+  public async updateById(userId: MongoId, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel
+      .findByIdAndUpdate(userId, dto, {new: true})
+      .exec();
+  }
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
@@ -42,5 +51,10 @@ export default class UserService implements UserServiceInterface {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async checkUserStatus(userId: MongoId): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.userModel.findById(userId);
+    return user || null;
   }
 }
