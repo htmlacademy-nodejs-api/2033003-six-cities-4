@@ -38,7 +38,7 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count ?? DEFAULT_OFFERS_COUNT;
+    const limit = count || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find()
       .populate(['authorId'])
@@ -48,7 +48,7 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async getPremiumOffersForCity(city: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count ?? DEFAULT_OFFERS_COUNT;
+    const limit = count || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find({ city: city, isPremium: true })
       .populate(['authorId'])
