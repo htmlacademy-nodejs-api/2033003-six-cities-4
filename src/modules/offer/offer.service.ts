@@ -37,47 +37,43 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
+  private async findOffers(query: any, count?: number): Promise<DocumentType<OfferEntity>[]> {
+    const limit = count || DEFAULT_OFFERS_COUNT;
+    return this.offerModel
+      .find(query)
+      .populate(['authorId'])
+      .sort({ publicationDate: SortType.Down })
+      .limit(limit)
+      .exec();
+  }
+  
   public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count || DEFAULT_OFFERS_COUNT;
-    return this.offerModel
-      .find()
-      .populate(['authorId'])
-      .sort({publicationDate: SortType.Down})
-      .limit(limit)
-      .exec();
+    return this.findOffers({}, count);
   }
-
+  
   public async getPremiumOffersForCity(city: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count || DEFAULT_OFFERS_COUNT;
-    return this.offerModel
-      .find({ city: city, isPremium: true })
-      .populate(['authorId'])
-      .sort({publicationDate: SortType.Down})
-      .limit(limit)
-      .exec();
+    const query = { city: city, isPremium: true };
+    return this.findOffers(query, count);
   }
-
+  
   public async getFavoriteOffers(count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count || DEFAULT_OFFERS_COUNT;
-    return this.offerModel
-      .find({isFavorite: true })
-      .populate(['authorId'])
-      .sort({publicationDate: SortType.Down})
-      .limit(limit)
-      .exec();
+    const query = { isFavorite: true };
+    return this.findOffers(query, count);
   }
 
   public async addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
-      .findByIdAndUpdate(offerId,
+      .findOneAndUpdate(
+        { _id: offerId },
         { $set: { isFavorite: true } },
         { new: true }
       ).exec();
   }
-
+  
   public async removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
-      .findByIdAndUpdate(offerId,
+      .findOneAndUpdate(
+        { _id: offerId },
         { $set: { isFavorite: false } },
         { new: true }
       ).exec();
