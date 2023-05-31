@@ -5,5 +5,8 @@ import { OfferEntity } from './offer.entity.js';
 
 export interface OfferServiceInterface {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
-  findByOfferId(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  update(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
+  delete(offerId: string): Promise<boolean>;
+  getRentOffers(): Promise<DocumentType<OfferEntity>[]>;
+  getOfferDetails(offerId: string): Promise<DocumentType<OfferEntity> | null>;
 }

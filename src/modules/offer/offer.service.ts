@@ -20,7 +20,17 @@ export default class OfferService implements OfferServiceInterface {
     return result;
   }
 
-  public async findByOfferId(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+  public async update(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
+    throw new Error('Method not implemented.');
+  }
+  public async delete(offerId: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+  public async getRentOffers(): Promise<DocumentType<OfferEntity>[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  public async getOfferDetails(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel.findById(offerId).exec();
   }
 
