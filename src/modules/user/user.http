@@ -8,7 +8,7 @@ Content-Type: application/json
   "name": "Jack",
   "email": "torans@overlook.net",
   "avatarPath": "torrance.png",
-  "type": "обычный",
+  "userType": "обычный",
   "password": "shining"
 }
 

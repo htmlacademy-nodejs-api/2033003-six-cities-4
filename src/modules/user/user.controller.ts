@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
 import { Controller } from '../../core/controller/controller.abstract.js';
@@ -6,11 +7,19 @@ import type { LoggerInterface } from '../../core/logger/logger.interface.js';
 import { AppComponent } from '../../types/app-component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import CreateUserDto from './dto/create-user.dto.js';
+import type { UserServiceInterface } from './user-service.interface.js';
+import type { ConfigInterface } from '../../core/config/config.interface.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
+import HttpError from '../../core/errors/http-error.js';
+import UserRdo from './rdo/user.rdo.js';
+import { fillDTO } from '../../core/helpers/index.js';
 
 @injectable()
 export default class UserController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) protected readonly logger: LoggerInterface,
+    @inject(AppComponent.UserServiceInterface) private readonly userService: UserServiceInterface,
+    @inject(AppComponent.ConfigInterface) private readonly configService: ConfigInterface<RestSchema>
   ) {
     super(logger);
     this.logger.info('Register routes for UserController…');
@@ -19,14 +28,23 @@ export default class UserController extends Controller {
   }
 
   public async create(
-    _req: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
-    _res: Response,
-    next: NextFunction
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
+    res: Response,
   ): Promise<void> {
-    try {
-      throw new Error('[UserController] Oops');
-    } catch (error) {
-      return next(error);
+    const existsUser = await this.userService.findByEmail(body.email);
+
+    if (existsUser) {
+      throw new HttpError(
+        StatusCodes.CONFLICT,
+        `User with email «${body.email}» exists.`,
+        'UserController'
+      );
     }
+
+    const result = await this.userService.create(body, this.configService.get('SALT'));
+    this.created(
+      res,
+      fillDTO(UserRdo, result)
+    );
   }
 }
