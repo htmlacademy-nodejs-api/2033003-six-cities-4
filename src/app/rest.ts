@@ -9,6 +9,7 @@ import { RestSchema } from '../core/config/rest.schema.js';
 import { AppComponent } from '../types/app-component.enum.js';
 import { getMongoURI } from '../core/helpers/db.js';
 import { ControllerInterface } from '../core/controller/controller.interface.js';
+import { ExceptionFilterInterface } from '../core/expception-filters/exception-filter.interface.js';
 
 @injectable()
 export default class RestApplication {
@@ -19,8 +20,17 @@ export default class RestApplication {
     @inject(AppComponent.ConfigInterface) private readonly config: ConfigInterface<RestSchema>,
     @inject(AppComponent.DatabaseClientInterface) private readonly databaseClient: DatabaseClientInterface,
     @inject(AppComponent.UserController) private readonly userController: ControllerInterface,
+    @inject(AppComponent.ExceptionFilterInterface) private readonly exceptionFilter: ExceptionFilterInterface,
   ) {
     this.expressApplication = express();
+  }
+
+  private async _initExceptionFilters() {
+    this.logger.info('Exception filters initialization');
+
+    this.expressApplication.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
+
+    this.logger.info('Exception filters completed');
   }
 
   private async _initMiddleware() {
@@ -74,6 +84,8 @@ export default class RestApplication {
     await this._initMiddleware();
 
     await this._initRoutes();
+
+    await this._initExceptionFilters();
 
     await this._initServer().catch((error) => {
       this.logger.error(`Error server initialization: ${error.message}`);
