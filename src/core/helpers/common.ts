@@ -27,3 +27,9 @@ export function getCoordinates(city: string): CityCoordinates {
     throw new Error('Invalid city');
   }
 }
+
+export function createErrorObject(message: string) {
+  return {
+    error: message,
+  };
+}
