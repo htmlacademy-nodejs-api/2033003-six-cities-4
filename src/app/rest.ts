@@ -8,6 +8,7 @@ import type { DatabaseClientInterface } from '../core/database-client/mongo-clie
 import { RestSchema } from '../core/config/rest.schema.js';
 import { AppComponent } from '../types/app-component.enum.js';
 import { getMongoURI } from '../core/helpers/db.js';
+import { ControllerInterface } from '../core/controller/controller.interface.js';
 
 @injectable()
 export default class RestApplication {
@@ -16,9 +17,18 @@ export default class RestApplication {
   constructor(
     @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface,
     @inject(AppComponent.ConfigInterface) private readonly config: ConfigInterface<RestSchema>,
-    @inject(AppComponent.DatabaseClientInterface) private readonly databaseClient: DatabaseClientInterface
+    @inject(AppComponent.DatabaseClientInterface) private readonly databaseClient: DatabaseClientInterface,
+    @inject(AppComponent.UserController) private readonly userController: ControllerInterface,
   ) {
     this.expressApplication = express();
+  }
+
+  private async _initRoutes() {
+    this.logger.info('Controller initialization…');
+
+    this.expressApplication.use('/users', this.userController.router);
+
+    this.logger.info('Controller initialization completed');
   }
 
   private async _initDb() {
@@ -52,6 +62,8 @@ export default class RestApplication {
     await this._initDb().catch((error) => {
       this.logger.error(`Error during database initialization: ${error.message}`);
     });
+
+    await this._initRoutes();
 
     await this._initServer().catch((error) => {
       this.logger.error(`Error server initialization: ${error.message}`);
