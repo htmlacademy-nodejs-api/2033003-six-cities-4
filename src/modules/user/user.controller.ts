@@ -13,6 +13,7 @@ import { RestSchema } from '../../core/config/rest.schema.js';
 import HttpError from '../../core/errors/http-error.js';
 import UserRdo from './rdo/user.rdo.js';
 import { fillDTO } from '../../core/helpers/index.js';
+import LoginUserDto from './dto/login-user.dto.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -25,6 +26,28 @@ export default class UserController extends Controller {
     this.logger.info('Register routes for UserController…');
 
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
+  }
+
+  public async login(
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    _res: Response,
+  ): Promise<void> {
+    const existsUser = await this.userService.findByEmail(body.email);
+
+    if (!existsUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        `User with email ${body.email} not found.`,
+        'UserController',
+      );
+    }
+
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController',
+    );
   }
 
   public async create(
