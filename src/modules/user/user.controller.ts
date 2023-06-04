@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
 import { Controller } from '../../core/controller/controller.abstract.js';
@@ -18,10 +18,15 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
   }
 
-  public create(
+  public async create(
     _req: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
-    _res: Response
-  ): void {
-    throw new Error('[UserController] Oops');
+    _res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      throw new Error('[UserController] Oops');
+    } catch (error) {
+      return next(error);
+    }
   }
 }
