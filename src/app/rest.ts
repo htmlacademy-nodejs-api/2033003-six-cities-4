@@ -23,6 +23,14 @@ export default class RestApplication {
     this.expressApplication = express();
   }
 
+  private async _initMiddleware() {
+    this.logger.info('Global middleware initialization…');
+
+    this.expressApplication.use(express.json());
+
+    this.logger.info('Global middleware initialization completed');
+  }
+
   private async _initRoutes() {
     this.logger.info('Controller initialization…');
 
@@ -62,6 +70,8 @@ export default class RestApplication {
     await this._initDb().catch((error) => {
       this.logger.error(`Error during database initialization: ${error.message}`);
     });
+
+    await this._initMiddleware();
 
     await this._initRoutes();
 
