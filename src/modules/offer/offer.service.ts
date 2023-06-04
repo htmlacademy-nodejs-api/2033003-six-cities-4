@@ -20,8 +20,7 @@ export default class OfferService implements OfferServiceInterface {
   ) {}
 
   public async exists(documentId: string): Promise<boolean> {
-    return (await this.offerModel
-      .exists({_id: documentId})) !== null;
+    return this.offerModel.exists({ _id: documentId }).then((v) => v !== null);
   }
 
   public async update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
@@ -37,23 +36,23 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  private async findOffers(query: object, count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count || DEFAULT_OFFERS_COUNT;
+  private async findOffers(query: object, limit?: number): Promise<DocumentType<OfferEntity>[]> {
+    const offerLimit = limit || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find(query)
       .populate(['authorId'])
       .sort({ publicationDate: SortType.Down })
-      .limit(limit)
+      .limit(offerLimit)
       .exec();
   }
 
-  public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.findOffers({}, count);
+  public async find(limit?: number): Promise<DocumentType<OfferEntity>[]> {
+    return this.findOffers({}, limit);
   }
 
-  public async getPremiumOffersForCity(city: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
+  public async getPremiumOffersForCity(city: string, limit?: number): Promise<DocumentType<OfferEntity>[]> {
     const query = { city: city, isPremium: true };
-    return this.findOffers(query, count);
+    return this.findOffers(query, limit);
   }
 
   public async getFavoriteOffers(count?: number): Promise<DocumentType<OfferEntity>[]> {

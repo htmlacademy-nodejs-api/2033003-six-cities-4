@@ -17,6 +17,11 @@ export default class CommentService implements CommentServiceInterface {
 
   public async createRating(offerId: MongoId): Promise<boolean> {
     const comments = await this.commentModel.find({ offerId });
+
+    if (!comments.length) {
+      return false;
+    }
+
     const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
     const averageRating = totalRating / comments.length;
 
