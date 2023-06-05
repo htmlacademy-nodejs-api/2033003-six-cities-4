@@ -29,7 +29,7 @@ export default class UserController extends Controller {
 
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/email/:email', method: HttpMethod.Get, handler: this.findByEmail });
+    this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
     this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById });
     this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
   }
@@ -71,10 +71,10 @@ export default class UserController extends Controller {
   }
 
   public async findByEmail(
-    { params }: Request<core.ParamsDictionary | ParamsGetUser>,
+    { body }: Request<core.ParamsDictionary | ParamsGetUser>,
     res: Response
   ): Promise<void> {
-    const { email } = params;
+    const { email } = body;
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
