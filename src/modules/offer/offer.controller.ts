@@ -100,7 +100,7 @@ export default class OfferController extends Controller {
     if (!offers) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Favorite offers not found.`,
+        'Favorite offers not found.',
         'OfferController'
       );
     }
@@ -118,7 +118,7 @@ export default class OfferController extends Controller {
     if (!offers) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Offers not found.`,
+        'Offers not found.',
         'OfferController'
       );
     }
@@ -171,7 +171,7 @@ export default class OfferController extends Controller {
     if (!createdOffer) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Offer is not created.`,
+        'Offer is not created.',
         'OfferController'
       );
     }
