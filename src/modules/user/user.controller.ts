@@ -31,14 +31,14 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({ path: '/email/:email', method: HttpMethod.Get, handler: this.findByEmail });
     this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById });
-    this.addRoute({ path: '/status/:userId', method: HttpMethod.Get, handler: this.checkUserStatus });
+    this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
   }
 
   public async checkUserStatus(
-    { params }: Request<core.ParamsDictionary | ParamsGetUser>,
+    { body }: Request<core.ParamsDictionary | ParamsGetUser>,
     res: Response
   ): Promise<void> {
-    const { userId } = params;
+    const { userId } = body;
     const user = await this.userService.checkUserStatus(userId);
 
     if (!user) {

@@ -234,8 +234,8 @@ paths:
         '401':
           description: Требуется авторизация для доступа к избранным предложениям.
 
-  /offers/{offerId}/favorite:
-    put:
+  /offers/favorites/{offerId}:
+    post:
       tags:
         - offers
       summary: Добавление предложения в избранное

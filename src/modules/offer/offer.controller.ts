@@ -24,8 +24,8 @@ export default class OfferController extends Controller {
 
     this.logger.info('Register routes for OfferController…');
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers });
-    this.addRoute({path: '/favorites/add/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
-    this.addRoute({path: '/favorites/remove/:offerId', method: HttpMethod.Post, handler: this.removeFromFavorites });
+    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
+    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites });
     this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.findOffers });

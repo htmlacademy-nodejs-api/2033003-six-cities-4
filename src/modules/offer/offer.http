@@ -87,12 +87,12 @@ GET http://localhost:4000/offers/favorites?limit=3 HTTP/1.1
 
 ## Добавить объявление в избранное
 
-POST http://localhost:4000/offers/favorites/add/646e4abea9d42ddd8415bced HTTP/1.1
+POST http://localhost:4000/offers/favorites/646e4abea9d42ddd8415bced HTTP/1.1
 
 ###
 
 ## Убрать объявление из избранного
 
-POST http://localhost:4000/offers/favorites/remove/646e4abea9d42ddd8415bced HTTP/1.1
+DELETE http://localhost:4000/offers/favorites/646e4abea9d42ddd8415bced HTTP/1.1
 
 ###
