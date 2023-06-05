@@ -79,6 +79,14 @@ export default class OfferController extends Controller {
     const { limit } = query;
     const offers = await this.offerService.getPremiumOffersForCity(city, Number(limit));
 
+    if (!offers) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Premium offers for city ${city} not found.`,
+        'OfferController'
+      );
+    }
+
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
@@ -89,6 +97,14 @@ export default class OfferController extends Controller {
     const { limit } = query;
     const offers = await this.offerService.getFavoriteOffers(Number(limit));
 
+    if (!offers) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Favorite offers not found.`,
+        'OfferController'
+      );
+    }
+
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
@@ -98,6 +114,14 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { limit } = query;
     const offers = await this.offerService.find(Number(limit));
+
+    if (!offers) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offers not found.`,
+        'OfferController'
+      );
+    }
 
     this.ok(res, fillDTO(OfferRdo, offers));
   }
@@ -143,6 +167,14 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const createdOffer = await this.offerService.create(body);
+
+    if (!createdOffer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer is not created.`,
+        'OfferController'
+      );
+    }
 
     this.created(res, fillDTO(OfferRdo, createdOffer));
   }
