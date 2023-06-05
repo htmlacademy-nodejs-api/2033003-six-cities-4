@@ -26,10 +26,10 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer});
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.findOffers });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.updateOffer});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
 
@@ -108,7 +108,7 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
-  public async findOffers(
+  public async index(
     { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
@@ -144,7 +144,7 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferRdo, deletedOffer));
   }
 
-  public async updateOffer(
+  public async update(
     {params, body}: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
@@ -162,7 +162,7 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
-  public async createOffer(
+  public async create(
     {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
     res: Response
   ): Promise<void> {
@@ -179,7 +179,7 @@ export default class OfferController extends Controller {
     this.created(res, fillDTO(OfferRdo, createdOffer));
   }
 
-  public async showOfferDetails(
+  public async show(
     {params}: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
