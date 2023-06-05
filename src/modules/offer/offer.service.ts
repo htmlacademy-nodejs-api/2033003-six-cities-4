@@ -55,9 +55,9 @@ export default class OfferService implements OfferServiceInterface {
     return this.findOffers(query, limit);
   }
 
-  public async getFavoriteOffers(count?: number): Promise<DocumentType<OfferEntity>[]> {
+  public async getFavoriteOffers(limit?: number): Promise<DocumentType<OfferEntity>[]> {
     const query = { isFavorite: true };
-    return this.findOffers(query, count);
+    return this.findOffers(query, limit);
   }
 
   public async addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {

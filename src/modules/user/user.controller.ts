@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
+import * as core from 'express-serve-static-core';
 
 import { Controller } from '../../core/controller/controller.abstract.js';
 import type { LoggerInterface } from '../../core/logger/logger.interface.js';
@@ -14,6 +15,7 @@ import HttpError from '../../core/errors/http-error.js';
 import UserRdo from './rdo/user.rdo.js';
 import { fillDTO } from '../../core/helpers/index.js';
 import LoginUserDto from './dto/login-user.dto.js';
+import { ParamsGetUser } from '../../types/params-get-user.type.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -27,6 +29,63 @@ export default class UserController extends Controller {
 
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
+    this.addRoute({ path: '/email/:email', method: HttpMethod.Get, handler: this.findByEmail });
+    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById });
+    this.addRoute({ path: '/status/:userId', method: HttpMethod.Get, handler: this.checkUserStatus });
+  }
+
+  public async checkUserStatus(
+    { params }: Request<core.ParamsDictionary | ParamsGetUser>,
+    res: Response
+  ): Promise<void> {
+    const { userId } = params;
+    const user = await this.userService.checkUserStatus(userId);
+
+    if (!user) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `User with id ${userId} not found.`,
+        'UserController'
+      );
+    }
+
+    this.ok(res, fillDTO(UserRdo, user));
+  }
+
+  public async updateById(
+    { params, body }: Request<core.ParamsDictionary | ParamsGetUser>,
+    res: Response
+  ): Promise<void> {
+    const { userId } = params;
+    const updatedUser = await this.userService.updateById(userId, body);
+
+    if (!updatedUser) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `User with id ${userId} not found.`,
+        'UserController'
+      );
+    }
+
+    this.ok(res, fillDTO(UserRdo, updatedUser));
+  }
+
+  public async findByEmail(
+    { params }: Request<core.ParamsDictionary | ParamsGetUser>,
+    res: Response
+  ): Promise<void> {
+    const { email } = params;
+    const user = await this.userService.findByEmail(email);
+
+    if (!user) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `User with email ${email} not found.`,
+        'UserController'
+      );
+    }
+
+    this.ok(res, fillDTO(UserRdo, user));
   }
 
   public async login(

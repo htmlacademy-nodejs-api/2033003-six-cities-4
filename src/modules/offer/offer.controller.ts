@@ -10,6 +10,9 @@ import { HttpMethod } from '../../types/http-method.enum.js';
 import HttpError from '../../core/errors/http-error.js';
 import type { OfferServiceInterface } from './offer-service.interface.js';
 import { ParamsGetOffer } from '../../types/params-get-offer.type.js';
+import CreateOfferDto from './dto/create-offer.dto.js';
+import { fillDTO } from '../../core/helpers/common.js';
+import OfferRdo from './rdo/offer.rdo.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -20,10 +23,131 @@ export default class OfferController extends Controller {
     super(logger);
 
     this.logger.info('Register routes for OfferController…');
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
+    this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers });
+    this.addRoute({path: '/favorites/add/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
+    this.addRoute({path: '/favorites/remove/:offerId', method: HttpMethod.Post, handler: this.removeFromFavorites });
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer});
+    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.findOffers });
+    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.updateOffer});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer});
+    this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
+
   }
 
-  public async show(
+  public async addToFavorites(
+    { params }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const addedToFavorites = await this.offerService.addToFavorites(offerId);
+
+    if (!addedToFavorites) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found.`,
+        'OfferController'
+      );
+    }
+
+    this.ok(res, fillDTO(OfferRdo, addedToFavorites));
+  }
+
+  public async removeFromFavorites(
+    { params }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const removedFromFavorites = await this.offerService.removeFromFavorites(offerId);
+
+    if (!removedFromFavorites) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found.`,
+        'OfferController'
+      );
+    }
+
+    this.ok(res, fillDTO(OfferRdo, removedFromFavorites));
+  }
+
+  public async getPremiumOffersForCity(
+    { params, query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const { city } = params;
+    const { limit } = query;
+    const offers = await this.offerService.getPremiumOffersForCity(city, Number(limit));
+
+    this.ok(res, fillDTO(OfferRdo, offers));
+  }
+
+  public async getFavoriteOffers(
+    { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const { limit } = query;
+    const offers = await this.offerService.getFavoriteOffers(Number(limit));
+
+    this.ok(res, fillDTO(OfferRdo, offers));
+  }
+
+  public async findOffers(
+    { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const { limit } = query;
+    const offers = await this.offerService.find(Number(limit));
+
+    this.ok(res, fillDTO(OfferRdo, offers));
+  }
+
+  public async deleteOffer(
+    {params}: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const {offerId} = params;
+    const deletedOffer = await this.offerService.delete(offerId);
+
+    if (!deletedOffer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found.`,
+        'OfferController'
+      );
+    }
+
+    this.ok(res, fillDTO(OfferRdo, deletedOffer));
+  }
+
+  public async updateOffer(
+    {params, body}: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response
+  ): Promise<void> {
+    const {offerId} = params;
+    const updatedOffer = await this.offerService.update(offerId, body);
+
+    if (!updatedOffer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found.`,
+        'OfferController'
+      );
+    }
+
+    this.ok(res, fillDTO(OfferRdo, updatedOffer));
+  }
+
+  public async createOffer(
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
+    res: Response
+  ): Promise<void> {
+    const createdOffer = await this.offerService.create(body);
+
+    this.created(res, fillDTO(OfferRdo, createdOffer));
+  }
+
+  public async showOfferDetails(
     {params}: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
@@ -38,6 +162,6 @@ export default class OfferController extends Controller {
       );
     }
 
-    this.ok(res, offer);
+    this.ok(res, fillDTO(OfferRdo, offer));
   }
 }

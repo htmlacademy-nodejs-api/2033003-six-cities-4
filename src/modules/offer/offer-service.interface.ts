@@ -13,13 +13,13 @@ export interface OfferServiceInterface {
   update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   delete(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 
-  find(count?: number): Promise<DocumentType<OfferEntity>[]>;
+  find(limit?: number): Promise<DocumentType<OfferEntity>[]>;
 
   getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 
-  getPremiumOffersForCity(city: string, count?: number): Promise<DocumentType<OfferEntity>[]>;
+  getPremiumOffersForCity(city: string, limit?: number): Promise<DocumentType<OfferEntity>[]>;
 
-  getFavoriteOffers(count?: number): Promise<DocumentType<OfferEntity>[]>;
+  getFavoriteOffers(limit?: number): Promise<DocumentType<OfferEntity>[]>;
   addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
   removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 
