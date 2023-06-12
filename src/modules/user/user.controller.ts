@@ -16,6 +16,7 @@ import UserRdo from './rdo/user.rdo.js';
 import { fillDTO } from '../../core/helpers/index.js';
 import LoginUserDto from './dto/login-user.dto.js';
 import { ParamsGetUser } from '../../types/params-get-user.type.js';
+import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -30,7 +31,7 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
-    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById });
+    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId')] });
     this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
   }
 

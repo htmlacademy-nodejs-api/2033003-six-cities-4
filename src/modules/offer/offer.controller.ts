@@ -15,6 +15,7 @@ import { fillDTO } from '../../core/helpers/common.js';
 import OfferRdo from './rdo/offer.rdo.js';
 import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 import CommentResponse from '../comment/response/comment.response.js';
+import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -27,15 +28,15 @@ export default class OfferController extends Controller {
 
     this.logger.info('Register routes for OfferController…');
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers });
-    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
-    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails});
+    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new ValidateObjectIdMiddleware('offerId')] });
+    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new ValidateObjectIdMiddleware('offerId')] });
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
-    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments});
+    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
   }
 
   public async addToFavorites(
