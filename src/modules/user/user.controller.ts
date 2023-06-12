@@ -17,6 +17,8 @@ import { fillDTO } from '../../core/helpers/index.js';
 import LoginUserDto from './dto/login-user.dto.js';
 import { ParamsGetUser } from '../../types/params-get-user.type.js';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import UpdateUserDto from './dto/update-user.dto.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -28,10 +30,10 @@ export default class UserController extends Controller {
     super(logger);
     this.logger.info('Register routes for UserController…');
 
-    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
-    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
+    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)] });
+    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
     this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
-    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId')] });
+    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
     this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
   }
 
@@ -54,7 +56,7 @@ export default class UserController extends Controller {
   }
 
   public async updateById(
-    { params, body }: Request<core.ParamsDictionary | ParamsGetUser>,
+    { params, body }: Request<core.ParamsDictionary | ParamsGetUser, Record<string, unknown>, UpdateUserDto>,
     res: Response
   ): Promise<void> {
     const { userId } = params;

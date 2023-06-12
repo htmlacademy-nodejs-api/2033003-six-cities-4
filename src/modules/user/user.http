@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "name": "Jack",
-  "email": "torans@overlook.net",
+  "email": "torans3w@overlook.net",
   "avatarPath": "torrance.png",
   "userType": "обычный",
   "password": "shining"
