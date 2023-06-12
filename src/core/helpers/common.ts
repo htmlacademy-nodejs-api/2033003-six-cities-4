@@ -1,6 +1,8 @@
 import * as crypto from 'node:crypto';
 
-import { CityCoordinates } from '../../types/city-coordinates.type.js';
+import { plainToInstance, ClassConstructor } from 'class-transformer';
+
+import type { CityCoordinates } from '../../types/city-coordinates.type.js';
 import { City } from '../../types/city.enum.js';
 import { cityCoordinates } from '../../const.js';
 
@@ -26,4 +28,14 @@ export function getCoordinates(city: string): CityCoordinates {
   } else {
     throw new Error('Invalid city');
   }
+}
+
+export function createErrorObject(message: string) {
+  return {
+    error: message,
+  };
+}
+
+export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
 }
