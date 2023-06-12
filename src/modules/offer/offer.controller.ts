@@ -26,7 +26,7 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
@@ -115,15 +115,7 @@ export default class OfferController extends Controller {
     const { limit } = query;
     const offers = await this.offerService.find(Number(limit));
 
-    if (!offers) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        'Offers not found.',
-        'OfferController'
-      );
-    }
-
-    this.ok(res, fillDTO(OfferRdo, offers));
+    this.ok(res, fillDTO(OfferRdo, offers || []));
   }
 
   public async deleteOffer(
@@ -170,7 +162,7 @@ export default class OfferController extends Controller {
 
     if (!createdOffer) {
       throw new HttpError(
-        StatusCodes.NOT_FOUND,
+        StatusCodes.INTERNAL_SERVER_ERROR,
         'Offer is not created.',
         'OfferController'
       );
@@ -179,7 +171,7 @@ export default class OfferController extends Controller {
     this.created(res, fillDTO(OfferRdo, createdOffer));
   }
 
-  public async show(
+  public async showOfferDetails(
     {params}: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
