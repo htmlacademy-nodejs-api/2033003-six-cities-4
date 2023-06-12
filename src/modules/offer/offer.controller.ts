@@ -13,12 +13,15 @@ import { ParamsGetOffer } from '../../types/params-get-offer.type.js';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import { fillDTO } from '../../core/helpers/common.js';
 import OfferRdo from './rdo/offer.rdo.js';
+import { CommentServiceInterface } from '../comment/comment-service.interface.js';
+import CommentResponse from '../comment/response/comment.response.js';
 
 @injectable()
 export default class OfferController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) logger: LoggerInterface,
     @inject(AppComponent.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
+    @inject(AppComponent.CommentServiceInterface) private readonly commentService: CommentServiceInterface
   ) {
     super(logger);
 
@@ -27,12 +30,12 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites });
     this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
-
+    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments});
   }
 
   public async addToFavorites(
@@ -154,7 +157,7 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
-  public async create(
+  public async createOffer(
     {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
     res: Response
   ): Promise<void> {
@@ -187,5 +190,21 @@ export default class OfferController extends Controller {
     }
 
     this.ok(res, fillDTO(OfferRdo, offer));
+  }
+
+  public async getComments(
+    {params}: Request<core.ParamsDictionary | ParamsGetOffer, object, object>,
+    res: Response
+  ): Promise<void> {
+    if (!await this.offerService.exists(params.offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${params.offerId} not found.`,
+        'OfferController'
+      );
+    }
+
+    const comments = await this.commentService.findByOfferId(params.offerId);
+    this.ok(res, fillDTO(CommentResponse, comments));
   }
 }

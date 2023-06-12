@@ -5,9 +5,6 @@ import { OfferEntity } from './offer.entity.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import type { MongoId } from '../../types/mongoId.type.js';
 
-
-//TODO:найти в библиотеках
-
 export interface OfferServiceInterface {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
   update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
