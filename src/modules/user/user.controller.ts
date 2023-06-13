@@ -1,3 +1,4 @@
+import { DocumentExistsMiddleware } from './../../core/middlewares/document-exists.middleware';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
@@ -33,7 +34,7 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)] });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
     this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
-    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
+    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'authorId'), new ValidateDtoMiddleware(UpdateUserDto)] });
     this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
   }
 

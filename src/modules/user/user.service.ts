@@ -56,4 +56,8 @@ export default class UserService implements UserServiceInterface {
     const user = await this.userModel.findById(userId);
     return user || null;
   }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return this.userModel.exists({ _id: documentId }).then((v) => v !== null);
+  }
 }

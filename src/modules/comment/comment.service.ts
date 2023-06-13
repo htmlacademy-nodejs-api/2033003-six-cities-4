@@ -44,5 +44,4 @@ export default class CommentService implements CommentServiceInterface {
       .find({offerId})
       .populate('authorId');
   }
-
 }
