@@ -48,15 +48,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { offerId } = params;
     const addedToFavorites = await this.offerService.addToFavorites(offerId);
-
-    if (!addedToFavorites) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, addedToFavorites));
   }
 
@@ -66,15 +57,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { offerId } = params;
     const removedFromFavorites = await this.offerService.removeFromFavorites(offerId);
-
-    if (!removedFromFavorites) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, removedFromFavorites));
   }
 
@@ -85,15 +67,6 @@ export default class OfferController extends Controller {
     const { city } = params;
     const { limit } = query;
     const offers = await this.offerService.getPremiumOffersForCity(city, Number(limit));
-
-    if (!offers) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Premium offers for city ${city} not found.`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
@@ -103,15 +76,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { limit } = query;
     const offers = await this.offerService.getFavoriteOffers(Number(limit));
-
-    if (!offers) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        'Favorite offers not found.',
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
@@ -121,7 +85,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { limit } = query;
     const offers = await this.offerService.find(Number(limit));
-
     this.ok(res, fillDTO(OfferRdo, offers || []));
   }
 
@@ -131,15 +94,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const deletedOffer = await this.offerService.delete(offerId);
-
-    if (!deletedOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, deletedOffer));
   }
 
@@ -149,15 +103,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const updatedOffer = await this.offerService.update(offerId, body);
-
-    if (!updatedOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
@@ -166,15 +111,6 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const createdOffer = await this.offerService.create(body);
-
-    if (!createdOffer) {
-      throw new HttpError(
-        StatusCodes.INTERNAL_SERVER_ERROR,
-        'Offer is not created.',
-        'OfferController'
-      );
-    }
-
     this.created(res, fillDTO(OfferRdo, createdOffer));
   }
 
@@ -184,15 +120,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const offer = await this.offerService.getOfferDetails(offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
@@ -200,14 +127,6 @@ export default class OfferController extends Controller {
     {params}: Request<core.ParamsDictionary | ParamsGetOffer, object, object>,
     res: Response
   ): Promise<void> {
-    if (!await this.offerService.exists(params.offerId)) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${params.offerId} not found.`,
-        'OfferController'
-      );
-    }
-
     const comments = await this.commentService.findByOfferId(params.offerId);
     this.ok(res, fillDTO(CommentResponse, comments));
   }
