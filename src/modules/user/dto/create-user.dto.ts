@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail, Matches, IsOptional, MaxLength, MinLength, IsIn } from 'class-validator';
+import { IsNotEmpty, IsEmail, Matches, IsOptional, MaxLength, MinLength, IsEnum } from 'class-validator';
 
 import { UserType } from '../../../types/user-type.enum.js';
 
@@ -17,7 +17,7 @@ export default class CreateUserDto {
   public avatar?: string | undefined;
 
   @IsNotEmpty({ message: 'User Type are required' })
-  @IsIn([UserType.Base, UserType.Pro], { message: 'Invalid user type' })
+  @IsEnum(UserType, { message: 'Invalid user type' })
   public userType!: UserType;
 
   @IsNotEmpty({ message: 'Password are required' })

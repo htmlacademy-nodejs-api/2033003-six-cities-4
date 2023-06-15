@@ -20,6 +20,7 @@ import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-obje
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import UpdateUserDto from './dto/update-user.dto.js';
 import { DocumentExistsMiddleware } from './../../core/middlewares/document-exists.middleware.js';
+import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -34,8 +35,18 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)] });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
     this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
-    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'authorId'), new ValidateDtoMiddleware(UpdateUserDto)] });
+    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
     this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+      ]
+    });
   }
 
   public async checkUserStatus(
@@ -132,5 +143,11 @@ export default class UserController extends Controller {
       res,
       fillDTO(UserRdo, result)
     );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
   }
 }
