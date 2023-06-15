@@ -36,7 +36,7 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer, middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'), new ValidateDtoMiddleware(UpdateOfferDto)]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update, middlewares: [new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
     this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
