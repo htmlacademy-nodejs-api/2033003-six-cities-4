@@ -1,4 +1,3 @@
-import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import * as core from 'express-serve-static-core';
@@ -7,7 +6,6 @@ import { Controller } from '../../core/controller/controller.abstract.js';
 import { LoggerInterface } from '../../core/logger/logger.interface.js';
 import { AppComponent } from '../../types/app-component.enum.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
-import HttpError from '../../core/errors/http-error.js';
 import type { OfferServiceInterface } from './offer-service.interface.js';
 import { ParamsGetOffer } from '../../types/params-get-offer.type.js';
 import CreateOfferDto from './dto/create-offer.dto.js';

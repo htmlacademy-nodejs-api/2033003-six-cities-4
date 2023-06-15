@@ -1,4 +1,3 @@
-import { DocumentExistsMiddleware } from './../../core/middlewares/document-exists.middleware';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
@@ -20,6 +19,7 @@ import { ParamsGetUser } from '../../types/params-get-user.type.js';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import UpdateUserDto from './dto/update-user.dto.js';
+import { DocumentExistsMiddleware } from './../../core/middlewares/document-exists.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
