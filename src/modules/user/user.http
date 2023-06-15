@@ -5,10 +5,10 @@ POST http://localhost:4000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Jack",
-  "email": "torans3w@overlook.net",
-  "avatarPath": "torrance.png",
-  "userType": "обычный",
+  "name": "Jacky",
+  "email": "torans33wq@overlook.net",
+  "avatarPath": "torranceq.png",
+  "userType": "pro",
   "password": "shining"
 }
 
@@ -20,7 +20,7 @@ POST http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "torans@overlook.net",
+  "email": "toran4@overlook.net",
   "password": "123456"
 }
 
@@ -32,7 +32,7 @@ GET http://localhost:4000/users/email HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "alexander@example.com"
+  "email": "toran4@overlook.net"
 }
 ###
 
@@ -42,17 +42,32 @@ GET http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "userId": "646e4abea9d42ddd8415bcd2"
+  "userId": "648734252cee4bc8df2ed742"
 }
 ###
 
 ## Обновление пользователя по id
 
-PUT http://localhost:4000/users/646e4abea9d42ddd8415bcf0 HTTP/1.1
+PUT http://localhost:4000/users/648734252cee4bc8df2ed742 HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "toran@overlook.net",
-  "password": "123456"
+  "email": "toran4@overlook.net",
+  "password": "123457"
 }
+###
+
+
+## Отправка аватарки пользователю
+
+POST http://localhost:4000/users/648734252cee4bc8df2ed742/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="default-avatar.png"
+Content-Type: image/png
+
+< /Users/aleksandr/Documents/GitHub/2033003-six-cities-4/src/assets/default-avatar.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
 ###
