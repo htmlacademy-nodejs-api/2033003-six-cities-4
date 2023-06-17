@@ -78,8 +78,6 @@ export default class CreateOfferDto {
   @IsEnum(Amenities, { each: true, message: 'Invalid amenity' })
   public amenities!: Amenities[];
 
-  @IsNotEmpty({ message: 'Author are required' })
-  @IsMongoId({message: 'Author field must be valid an id'})
   public authorId!: string;
 
   @IsInt({ message: 'Comment count must be an integer' })

@@ -14,6 +14,7 @@ import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 import CommentResponse from './response/comment.response.js';
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
+import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -30,7 +31,7 @@ export default class CommentController extends Controller {
         path: '/',
         method: HttpMethod.Post,
         handler: this.createComment,
-        middlewares: [new ValidateDtoMiddleware(CreateCommentDto)]
+        middlewares: [new PrivateRouteMiddleware(), new ValidateDtoMiddleware(CreateCommentDto)]
       });
   }
 

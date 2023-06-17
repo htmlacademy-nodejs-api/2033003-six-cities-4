@@ -18,6 +18,7 @@ import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middl
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
+import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -29,14 +30,14 @@ export default class OfferController extends Controller {
     super(logger);
 
     this.logger.info('Register routes for OfferController…');
-    this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers });
-    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
-    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
+    this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers, middlewares: [new PrivateRouteMiddleware()] });
+    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
+    this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
     this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer, middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateDtoMiddleware(CreateOfferDto)]});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update, middlewares: [new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
     this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
   }
@@ -106,11 +107,12 @@ export default class OfferController extends Controller {
   }
 
   public async createOffer(
-    {body}: Request<UnknownRecord, UnknownRecord, CreateOfferDto>,
+    { body, user }: Request<UnknownRecord, UnknownRecord, CreateOfferDto>,
     res: Response
   ): Promise<void> {
-    const createdOffer = await this.offerService.create(body);
-    this.created(res, fillDTO(OfferRdo, createdOffer));
+    const result = await this.offerService.create({ ...body, authorId: user.id });
+    const offer = await this.offerService.find(result.id);
+    this.created(res, fillDTO(OfferRdo, offer));
   }
 
   public async showOfferDetails(
