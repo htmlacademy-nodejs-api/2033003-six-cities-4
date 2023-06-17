@@ -17,6 +17,7 @@ import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-obje
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
+import { UnknownRecord } from '../../types/unknown-record.type.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -96,7 +97,7 @@ export default class OfferController extends Controller {
   }
 
   public async update(
-    {params, body}: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateOfferDto>,
+    {params, body}: Request<core.ParamsDictionary | ParamsGetOffer, UnknownRecord, UpdateOfferDto>,
     res: Response
   ): Promise<void> {
     const {offerId} = params;
@@ -105,7 +106,7 @@ export default class OfferController extends Controller {
   }
 
   public async createOffer(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
+    {body}: Request<UnknownRecord, UnknownRecord, CreateOfferDto>,
     res: Response
   ): Promise<void> {
     const createdOffer = await this.offerService.create(body);
