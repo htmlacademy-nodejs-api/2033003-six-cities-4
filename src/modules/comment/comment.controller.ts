@@ -13,6 +13,7 @@ import { CommentServiceInterface } from './comment-service.interface.js';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 import CommentResponse from './response/comment.response.js';
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import { UnknownRecord } from '../../types/unknown-record.type.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -34,7 +35,7 @@ export default class CommentController extends Controller {
   }
 
   public async createComment(
-    {body}: Request<object, object, CreateCommentDto>,
+    { body, user }: Request<UnknownRecord, UnknownRecord, CreateCommentDto>,
     res: Response
   ): Promise<void> {
 
@@ -46,7 +47,7 @@ export default class CommentController extends Controller {
       );
     }
 
-    const comment = await this.commentService.create(body);
+    const comment = await this.commentService.create({ ...body, authorId: user.id });
     await this.offerService.incCommentCount(body.offerId);
     this.created(res, fillDTO(CommentResponse, comment));
   }
