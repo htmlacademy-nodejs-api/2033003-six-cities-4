@@ -71,7 +71,7 @@ export default class OfferController extends Controller {
   }
 
   public async getFavoriteOffers(
-    { }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    _req: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const offers = await this.offerService.getFavoriteOffers();
