@@ -56,7 +56,7 @@ export default class RestApplication {
 
     this.expressApplication.use('/users', this.userController.router);
     this.expressApplication.use('/offers', this.offerController.router);
-    this.expressApplication.use('/offers/:offerId/comments', this.commentController.router);
+    this.expressApplication.use('/comments', this.commentController.router);
 
     this.logger.info('Controller initialization completed');
   }

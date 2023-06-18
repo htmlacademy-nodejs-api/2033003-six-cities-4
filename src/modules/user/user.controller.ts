@@ -39,7 +39,7 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
     this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
     this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
-    this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
+    
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -57,7 +57,16 @@ export default class UserController extends Controller {
     });
   }
 
-  public async checkAuthenticate({ user: { email }}: Request, res: Response) {
+  public async checkAuthenticate(req: Request, res: Response) {
+    if (!req.user || !req.user.email) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    const { email } = req.user;
     const foundedUser = await this.userService.findByEmail(email);
 
     if (! foundedUser) {
@@ -69,24 +78,6 @@ export default class UserController extends Controller {
     }
 
     this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
-  }
-
-  public async checkUserStatus(
-    { body }: Request<core.ParamsDictionary | ParamsGetUser>,
-    res: Response
-  ): Promise<void> {
-    const { userId } = body;
-    const user = await this.userService.checkUserStatus(userId);
-
-    if (!user) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `User with id ${userId} not found.`,
-        'UserController'
-      );
-    }
-
-    this.ok(res, fillDTO(UserRdo, user));
   }
 
   public async updateById(
