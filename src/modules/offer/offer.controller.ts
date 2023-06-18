@@ -110,7 +110,7 @@ export default class OfferController extends Controller {
     { body, user }: Request<UnknownRecord, UnknownRecord, CreateOfferDto>,
     res: Response
   ): Promise<void> {
-    const result = await this.offerService.create({ ...body, userId: user.id });
+    const result = await this.offerService.create({ ...body, userId: user?.id });
     const offer = await this.offerService.find(result.id);
     this.created(res, fillDTO(OfferRdo, offer));
   }
