@@ -7,6 +7,8 @@ import CreateCommentDto from './dto/create-comment.dto.js';
 import { CommentEntity } from './comment.entity.js';
 import { MongoId } from '../../types/mongoId.type.js';
 import { OfferEntity } from '../offer/offer.entity.js';
+import { DEFAULT_COMMENTS_COUNT } from './comment.const.js';
+import { SortType } from '../../types/sort-type.enum.js';
 
 @injectable()
 export default class CommentService implements CommentServiceInterface {
@@ -46,6 +48,8 @@ export default class CommentService implements CommentServiceInterface {
   public async findByOfferId(offerId: MongoId): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
       .find({offerId})
+      .sort({ publicationDate: SortType.Down })
+      .limit(DEFAULT_COMMENTS_COUNT)
       .populate('userId');
   }
 }

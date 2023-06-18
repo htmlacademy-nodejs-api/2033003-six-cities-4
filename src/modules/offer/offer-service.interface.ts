@@ -15,9 +15,9 @@ export interface OfferServiceInterface extends DocumentExistsInterface {
 
   getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 
-  getPremiumOffersForCity(city: string, limit?: number): Promise<DocumentType<OfferEntity>[]>;
+  getPremiumOffersForCity(city: string): Promise<DocumentType<OfferEntity>[]>;
 
-  getFavoriteOffers(limit?: number): Promise<DocumentType<OfferEntity>[]>;
+  getFavoriteOffers(): Promise<DocumentType<OfferEntity>[]>;
   addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
   removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 

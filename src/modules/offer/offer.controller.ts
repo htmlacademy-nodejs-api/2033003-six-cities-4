@@ -62,21 +62,19 @@ export default class OfferController extends Controller {
   }
 
   public async getPremiumOffersForCity(
-    { params, query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { params }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const { city } = params;
-    const { limit } = query;
-    const offers = await this.offerService.getPremiumOffersForCity(city, Number(limit));
+    const offers = await this.offerService.getPremiumOffersForCity(city);
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
   public async getFavoriteOffers(
-    { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
-    const { limit } = query;
-    const offers = await this.offerService.getFavoriteOffers(Number(limit));
+    const offers = await this.offerService.getFavoriteOffers();
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
