@@ -80,12 +80,20 @@ export default class OfferController extends Controller {
   }
 
   public async index(
-    { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { query, user }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const { limit } = query;
+    const isAuthorized = user ? true : false;
+
     const offers = await this.offerService.find(Number(limit));
-    this.ok(res, fillDTO(OfferRdo, offers || []));
+
+    const offersWithFavoriteFlag = offers.map((offer) => ({
+      ...JSON.parse(JSON.stringify(offer)),
+      isFavorite: isAuthorized ? offer.isFavorite : false,
+    }));
+  
+    this.ok(res, fillDTO(OfferRdo, offersWithFavoriteFlag || []));
   }
 
   public async deleteOffer(
