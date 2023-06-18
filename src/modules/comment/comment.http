@@ -5,13 +5,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0I
 
 {
   "text": "Как обстоят дела с коробками? Фирменная упаковка сохранена?",
-  "offerId": "648ed4f3a2d4bfc1b3ea2392",
+  "offerId": "648eec38ce55121b171f3d66",
   "rating": 4.4
 }
 
 ###
 
 ## Список комментариев к объявлению
-GET http://localhost:4000/offers/648ed4f3a2d4bfc1b3ea2392/comments HTTP/1.1
+GET http://localhost:4000/offers/648eea36d1c34b0c7e86d133/comments HTTP/1.1
 
 ###

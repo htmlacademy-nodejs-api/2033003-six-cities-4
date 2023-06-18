@@ -15,6 +15,10 @@ export default class CommentService implements CommentServiceInterface {
     @inject(AppComponent.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
 
+  public async deleteByOfferId(offerId: MongoId): Promise<void> {
+    await this.commentModel.deleteMany({ offerId }).exec();
+  }
+
   public async createRating(offerId: MongoId): Promise<boolean> {
     const comments = await this.commentModel.find({ offerId });
 

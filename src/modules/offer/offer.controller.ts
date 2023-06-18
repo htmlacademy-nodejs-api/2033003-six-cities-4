@@ -19,6 +19,7 @@ import UpdateOfferDto from './dto/update-offer.dto.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { RentalOffer } from '../../types/rental-offer.type.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -84,15 +85,15 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const { limit } = query;
-    const isAuthorized = user ? true : false;
+    const isAuthorized = !!user;
 
     const offers = await this.offerService.find(Number(limit));
 
-    const offersWithFavoriteFlag = offers.map((offer) => ({
+    const offersWithFavoriteFlag: RentalOffer[] = offers.map((offer) => ({
       ...JSON.parse(JSON.stringify(offer)),
       isFavorite: isAuthorized ? offer.isFavorite : false,
     }));
-  
+
     this.ok(res, fillDTO(OfferRdo, offersWithFavoriteFlag || []));
   }
 
@@ -102,6 +103,7 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const deletedOffer = await this.offerService.delete(offerId);
+    await this.commentService.deleteByOfferId(offerId);
     this.ok(res, fillDTO(OfferRdo, deletedOffer));
   }
 
