@@ -43,7 +43,7 @@ export default class ImportCommand implements CliCommandInterface {
   private async saveOffer(offer: RentalOffer) {
 
     const user = await this.userService.findOrCreate({
-      ...offer.author,
+      ...offer.user,
       password: DEFAULT_USER_PASSWORD
     }, this.salt);
 
@@ -52,7 +52,7 @@ export default class ImportCommand implements CliCommandInterface {
     await this.offerService.create({
       ...offer,
       coordinates,
-      authorId: user.id,
+      userId: user.id,
     });
   }
 

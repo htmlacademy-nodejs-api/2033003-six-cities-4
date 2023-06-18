@@ -78,7 +78,7 @@ export default class CreateOfferDto {
   @IsEnum(Amenities, { each: true, message: 'Invalid amenity' })
   public amenities!: Amenities[];
 
-  public authorId!: string;
+  public userId!: string;
 
   @IsInt({ message: 'Comment count must be an integer' })
   @Min(0, { message: 'Comment count cannot be negative' })

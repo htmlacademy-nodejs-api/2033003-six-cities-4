@@ -40,7 +40,7 @@ Content-Type: application/json
     "Towels",
     "Fridge"
   ],
-  "authorId": "646e4abea9d42ddd8415bcd2",
+  "userId": "646e4abea9d42ddd8415bcd2",
   "commentCount": 0
 }
 

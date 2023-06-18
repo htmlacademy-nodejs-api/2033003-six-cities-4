@@ -6,7 +6,7 @@ Content-Type: application/json
   "text": "Как обстоят дела с коробками? Фирменная упаковка сохранена?",
   "offerId": "646e4abea9d42ddd8415bcd4",
   "rating": 4.4,
-  "authorId": "647cb9357ae1383619114f07"
+  "userId": "647cb9357ae1383619114f07"
 }
 
 ###

@@ -26,7 +26,7 @@ export default class OfferService implements OfferServiceInterface {
   public async update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
-      .populate(['authorId'])
+      .populate(['userId'])
       .exec();
   }
 
@@ -40,7 +40,7 @@ export default class OfferService implements OfferServiceInterface {
     const offerLimit = limit || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find(query)
-      .populate(['authorId'])
+      .populate(['userId'])
       .sort({ publicationDate: SortType.Down })
       .limit(offerLimit)
       .exec();
@@ -94,7 +94,7 @@ export default class OfferService implements OfferServiceInterface {
   public async getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate(['authorId'])
+      .populate(['userId'])
       .exec();
   }
 

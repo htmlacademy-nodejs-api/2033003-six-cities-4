@@ -553,7 +553,7 @@ components:
           type: number
           minimum: 1
           maximum: 5
-        author:
+        user:
           oneOf:
             - $ref: '#/components/schemas/regularUser'
             - $ref: '#/components/schemas/proUser'

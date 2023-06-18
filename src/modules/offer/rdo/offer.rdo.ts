@@ -51,7 +51,7 @@ export default class OfferRdo {
   public amenities!: Amenities[];
 
   @Expose()
-  public authorId!: string;
+  public userId!: string;
 
   @Expose()
   public commentCount!: number;

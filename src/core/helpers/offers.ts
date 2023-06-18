@@ -36,7 +36,7 @@ export function createOffer(offerData: string): RentalOffer {
     userTypeValue = UserType.Base;
   }
 
-  const author = {
+  const user = {
     name,
     email,
     avatar,
@@ -65,7 +65,7 @@ export function createOffer(offerData: string): RentalOffer {
     guests: parseInt(guests, 10),
     price: parseFloat(price),
     amenities: amenities.split(';'),
-    author,
+    user,
     commentCount: parseInt(commentCount, 10)
   } as RentalOffer;
 }
