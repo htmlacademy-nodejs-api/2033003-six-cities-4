@@ -13,7 +13,7 @@ import type { ConfigInterface } from '../../core/config/config.interface.js';
 import { RestSchema } from '../../core/config/rest.schema.js';
 import HttpError from '../../core/errors/http-error.js';
 import UserRdo from './rdo/user.rdo.js';
-import { fillDTO } from '../../core/helpers/index.js';
+import { createJWT, fillDTO } from '../../core/helpers/index.js';
 import LoginUserDto from './dto/login-user.dto.js';
 import { ParamsGetUser } from '../../types/params-get-user.type.js';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
@@ -21,6 +21,9 @@ import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middl
 import UpdateUserDto from './dto/update-user.dto.js';
 import { DocumentExistsMiddleware } from './../../core/middlewares/document-exists.middleware.js';
 import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
+import { JWT_ALGORITHM } from './user.const.js';
+import LoggedUserRdo from './rdo/logged-user.rdo.js';
+import type { UnknownRecord } from '../../types/unknown-record.type.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -36,7 +39,7 @@ export default class UserController extends Controller {
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
     this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
     this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
-    this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkUserStatus });
+
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -47,28 +50,38 @@ export default class UserController extends Controller {
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
       ]
     });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.checkAuthenticate,
+    });
   }
 
-  public async checkUserStatus(
-    { body }: Request<core.ParamsDictionary | ParamsGetUser>,
-    res: Response
-  ): Promise<void> {
-    const { userId } = body;
-    const user = await this.userService.checkUserStatus(userId);
-
-    if (!user) {
+  public async checkAuthenticate(req: Request, res: Response) {
+    if (!req.user || !req.user.email) {
       throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `User with id ${userId} not found.`,
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
         'UserController'
       );
     }
 
-    this.ok(res, fillDTO(UserRdo, user));
+    const { email } = req.user;
+    const foundedUser = await this.userService.findByEmail(email);
+
+    if (! foundedUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
 
   public async updateById(
-    { params, body }: Request<core.ParamsDictionary | ParamsGetUser, Record<string, unknown>, UpdateUserDto>,
+    { params, body }: Request<core.ParamsDictionary | ParamsGetUser, UnknownRecord, UpdateUserDto>,
     res: Response
   ): Promise<void> {
     const { userId } = params;
@@ -104,28 +117,38 @@ export default class UserController extends Controller {
   }
 
   public async login(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
-    _res: Response,
+    { body }: Request<UnknownRecord, UnknownRecord, LoginUserDto>,
+    res: Response,
   ): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
+    const user = await this
+      .userService
+      .verifyUser(body, this.configService.get('SALT'));
 
-    if (!existsUser) {
+    if (!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
+        'Unauthorized',
         'UserController',
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
+    const token = await createJWT(
+      JWT_ALGORITHM,
+      this.configService.get('JWT_SECRET'),
+      {
+        email: user.email,
+        id: user.id
+      }
     );
+
+    this.ok(res, fillDTO(LoggedUserRdo, {
+      email: user.email,
+      token
+    }));
   }
 
   public async create(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
+    {body}: Request<UnknownRecord, UnknownRecord, CreateUserDto>,
     res: Response,
   ): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);

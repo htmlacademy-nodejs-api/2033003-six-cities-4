@@ -14,7 +14,7 @@ export default class CreateUserDto {
 
   @Matches(/\.(jpg|png)$/, { message: 'Avatar must be in JPG or PNG format' })
   @IsOptional()
-  public avatar?: string | undefined;
+  public avatar!: string;
 
   @IsNotEmpty({ message: 'User Type are required' })
   @IsEnum(UserType, { message: 'Invalid user type' })

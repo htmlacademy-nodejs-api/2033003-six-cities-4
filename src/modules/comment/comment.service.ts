@@ -7,6 +7,8 @@ import CreateCommentDto from './dto/create-comment.dto.js';
 import { CommentEntity } from './comment.entity.js';
 import { MongoId } from '../../types/mongoId.type.js';
 import { OfferEntity } from '../offer/offer.entity.js';
+import { DEFAULT_COMMENTS_COUNT } from './comment.const.js';
+import { SortType } from '../../types/sort-type.enum.js';
 
 @injectable()
 export default class CommentService implements CommentServiceInterface {
@@ -14,6 +16,10 @@ export default class CommentService implements CommentServiceInterface {
     @inject(AppComponent.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>,
     @inject(AppComponent.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
+
+  public async deleteByOfferId(offerId: MongoId): Promise<void> {
+    await this.commentModel.deleteMany({ offerId }).exec();
+  }
 
   public async createRating(offerId: MongoId): Promise<boolean> {
     const comments = await this.commentModel.find({ offerId });
@@ -36,12 +42,14 @@ export default class CommentService implements CommentServiceInterface {
 
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const comment = await this.commentModel.create(dto);
-    return comment.populate('authorId');
+    return comment.populate('userId');
   }
 
   public async findByOfferId(offerId: MongoId): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
       .find({offerId})
-      .populate('authorId');
+      .sort({ publicationDate: SortType.Down })
+      .limit(DEFAULT_COMMENTS_COUNT)
+      .populate('userId');
   }
 }

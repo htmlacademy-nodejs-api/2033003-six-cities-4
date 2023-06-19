@@ -11,7 +11,7 @@ export type MockData = {
   guests: string;
   types: string[];
   amenities: string[];
-  authors: {
+  users: {
     name: string;
     email: string;
     avatar: string;

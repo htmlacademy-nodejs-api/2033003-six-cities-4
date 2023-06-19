@@ -80,7 +80,7 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsMongoId({message: 'Author field must be valid an id'})
-  public authorId?: string;
+  public userId?: string;
 
   @IsOptional()
   @IsInt({ message: 'Comment count must be an integer' })

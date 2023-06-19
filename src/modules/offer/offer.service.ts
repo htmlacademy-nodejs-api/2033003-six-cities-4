@@ -9,7 +9,7 @@ import CreateOfferDto from './dto/create-offer.dto.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import type { MongoId } from '../../types/mongoId.type.js';
 import { SortType } from '../../types/sort-type.enum.js';
-import { DEFAULT_OFFERS_COUNT } from './offer.const.js';
+import { DEFAULT_OFFERS_COUNT, DEFAULT_PREMIUM_OFFERS_COUNT } from './offer.const.js';
 
 
 @injectable()
@@ -26,7 +26,7 @@ export default class OfferService implements OfferServiceInterface {
   public async update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
-      .populate(['authorId'])
+      .populate(['userId'])
       .exec();
   }
 
@@ -40,7 +40,7 @@ export default class OfferService implements OfferServiceInterface {
     const offerLimit = limit || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find(query)
-      .populate(['authorId'])
+      .populate(['userId'])
       .sort({ publicationDate: SortType.Down })
       .limit(offerLimit)
       .exec();
@@ -50,14 +50,14 @@ export default class OfferService implements OfferServiceInterface {
     return this.findOffers({}, limit);
   }
 
-  public async getPremiumOffersForCity(city: string, limit?: number): Promise<DocumentType<OfferEntity>[]> {
+  public async getPremiumOffersForCity(city: string): Promise<DocumentType<OfferEntity>[]> {
     const query = { city: city, isPremium: true };
-    return this.findOffers(query, limit);
+    return this.findOffers(query, DEFAULT_PREMIUM_OFFERS_COUNT);
   }
 
-  public async getFavoriteOffers(limit?: number): Promise<DocumentType<OfferEntity>[]> {
+  public async getFavoriteOffers(): Promise<DocumentType<OfferEntity>[]> {
     const query = { isFavorite: true };
-    return this.findOffers(query, limit);
+    return this.findOffers(query);
   }
 
   public async addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
@@ -94,7 +94,7 @@ export default class OfferService implements OfferServiceInterface {
   public async getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate(['authorId'])
+      .populate(['userId'])
       .exec();
   }
 

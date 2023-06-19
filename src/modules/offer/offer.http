@@ -1,7 +1,7 @@
 # Объявления
 ## Объявление по идентификатору
 
-GET http://localhost:4000/offers/646e4abea9d42ddd8415bcd9 HTTP/1.1
+GET http://localhost:4000/offers/648eec37ce55121b171f3d57 HTTP/1.1
 
 ###
 
@@ -9,11 +9,12 @@ GET http://localhost:4000/offers/646e4abea9d42ddd8415bcd9 HTTP/1.1
 
 POST http://localhost:4000/offers/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
 
 {
   "title": "Роскошный отель в Брюсселе",
   "description": "Просторный дом с прекрасным видом на каналы Амстердама. Идеальное место для семейного отдыха и экскурсий по городу.",
-  "publicationDate": "2023-05-14T00:00:00.000Z",
+  "publicationDate": "2023-05-12T00:00:00.000Z",
   "city": "Cologne",
   "coordinates": {
     "latitude": 50.938361,
@@ -30,9 +31,9 @@ Content-Type: application/json
   ],
   "isPremium": true,
   "isFavorite": true,
-  "rating": 3.2,
   "type": "hotel",
   "rooms": 3,
+  "rating": 1,
   "guests": 7,
   "price": 503,
   "amenities": [
@@ -40,7 +41,6 @@ Content-Type: application/json
     "Towels",
     "Fridge"
   ],
-  "authorId": "646e4abea9d42ddd8415bcd2",
   "commentCount": 0
 }
 
@@ -50,7 +50,7 @@ Content-Type: application/json
 
 ## Обновление существующего объявления
 
-PUT http://localhost:4000/offers/646e4abea9d42ddd8415bccf HTTP/1.1
+PUT http://localhost:4000/offers/648ed4f3a2d4bfc1b3ea2392 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -71,38 +71,42 @@ Content-Type: application/json
 
 ###
 
-## Обновление существующего объявления
+## Удаление существующего объявления
 
-DELETE http://localhost:4000/offers/646e4abea9d42ddd8415bccf HTTP/1.1
+DELETE http://localhost:4000/offers/648eec37ce55121b171f3d5c HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
 
 ###
 
 ## Объявления в колличестве указанном в параметре limit
 
-GET http://localhost:4000/offers?limit=3 HTTP/1.1
+GET http://localhost:4000/offers?limit=60 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
 
 ###
 
-## Премиальные объявления в колличестве указанном в параметре limit для города
-
-GET http://localhost:4000/offers/premium/Brussels?limit=2 HTTP/1.1
+## Премиальные объявления
+GET http://localhost:4000/offers/premium/Cologne HTTP/1.1
 
 ###
 
-## Избранные объявления в колличестве указанном в параметре limit
+## Избранные объявления
 
-GET http://localhost:4000/offers/favorites?limit=3 HTTP/1.1
+GET http://localhost:4000/offers/favorites HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
 
 ###
 
 ## Добавить объявление в избранное
 
-POST http://localhost:4000/offers/favorites/646e4abea9d42ddd8415bced HTTP/1.1
+POST http://localhost:4000/offers/favorites/648ed4f3a2d4bfc1b3ea2392 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
 
 ###
 
 ## Убрать объявление из избранного
 
-DELETE http://localhost:4000/offers/favorites/646e4abea9d42ddd8415bced HTTP/1.1
+DELETE http://localhost:4000/offers/favorites/648ed4f3a2d4bfc1b3ea2392 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
 
 ###
