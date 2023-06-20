@@ -81,7 +81,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0I
 ## Объявления в колличестве указанном в параметре limit
 
 GET http://localhost:4000/offers?limit=60 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcyODMwMDgsImV4cCI6MTY4NzQ1NTgwOH0.7HBupuMnuomXjLAFuOZaMJKzRsqCvwcYosG9DYjt3LY
 
 ###
 

@@ -42,10 +42,10 @@ export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
   return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
 }
 
-export async function createJWT(algorithm: string, jwtSecret: string, payload: object): Promise<string> {
+export async function createJWT(algorithm: string, jwtSecret: string, payload: object, expirationTime: string): Promise<string> {
   return new jose.SignJWT({ ...payload })
     .setProtectedHeader({ alg: algorithm })
     .setIssuedAt()
-    .setExpirationTime('2d')
+    .setExpirationTime(expirationTime)
     .sign(crypto.createSecretKey(jwtSecret, 'utf-8'));
 }

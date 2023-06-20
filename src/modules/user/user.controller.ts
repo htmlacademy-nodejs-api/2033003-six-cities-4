@@ -24,6 +24,7 @@ import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middlew
 import { JWT_ALGORITHM } from './user.const.js';
 import LoggedUserRdo from './rdo/logged-user.rdo.js';
 import type { UnknownRecord } from '../../types/unknown-record.type.js';
+import { UserExistsByEmailMiddleware } from '../../core/middlewares/UserExistsByEmailMiddleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -37,7 +38,7 @@ export default class UserController extends Controller {
 
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)] });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
-    this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail });
+    this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail, middlewares: [new UserExistsByEmailMiddleware(this.userService)] });
     this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
 
     this.addRoute({
@@ -105,14 +106,6 @@ export default class UserController extends Controller {
     const { email } = body;
     const user = await this.userService.findByEmail(email);
 
-    if (!user) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `User with email ${email} not found.`,
-        'UserController'
-      );
-    }
-
     this.ok(res, fillDTO(UserRdo, user));
   }
 
@@ -138,7 +131,8 @@ export default class UserController extends Controller {
       {
         email: user.email,
         id: user.id
-      }
+      },
+      this.configService.get('EXPIRATION_TIME')
     );
 
     this.ok(res, fillDTO(LoggedUserRdo, {
