@@ -1,3 +1,5 @@
+import cors from 'cors';
+
 import { inject, injectable } from 'inversify';
 
 import express, { Express } from 'express';
@@ -47,7 +49,7 @@ export default class RestApplication {
 
     const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
     this.expressApplication.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
-
+    this.expressApplication.use(cors());
     this.logger.info('Global middleware initialization completed');
   }
 
