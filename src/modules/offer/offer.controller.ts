@@ -20,6 +20,8 @@ import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
+import { StatusCodes } from 'http-status-codes';
+import HttpError from '../../core/errors/http-error.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -96,11 +98,20 @@ export default class OfferController extends Controller {
   }
 
   public async deleteOffer(
-    {params}: Request<core.ParamsDictionary | ParamsGetOffer>,
+    {params, user}: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const {offerId} = params;
     const deletedOffer = await this.offerService.delete(offerId);
+
+    if (deletedOffer?.userId?.toString() !== user.id) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'You are not the owner of the offer',
+        'UserController'
+      );
+    }
+
     await this.commentService.deleteByOfferId(offerId);
     this.ok(res, fillDTO(OfferRdo, deletedOffer));
   }

@@ -2,8 +2,9 @@ import { Amenities } from '../../../types/amenities.enum.js';
 import { CityCoordinates } from '../../../types/city-coordinates.type.js';
 import { RentalType } from '../../../types/rental-type.enum.js';
 import { Validate, IsNotEmpty, ArrayMinSize, ArrayMaxSize, IsNumber, IsArray, IsDateString, IsEnum, IsInt, Max, MaxLength, Min, MinLength, IsBoolean, IsString, IsIn } from 'class-validator';
-import { IsValidCoordinates, cityCoordinates } from '../../../const.js';
 import { City } from '../../../types/city.enum.js';
+import { IsValidCoordinates } from '../../../core/helpers/common.js';
+import { cityCoordinates } from '../offer.const.js';
 
 export default class CreateOfferDto {
   @IsNotEmpty({ message: 'Title are required' })

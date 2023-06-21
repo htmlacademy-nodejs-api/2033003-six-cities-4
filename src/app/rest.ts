@@ -1,18 +1,17 @@
 import cors from 'cors';
-
+import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
 
-import express, { Express } from 'express';
-
 import type { ConfigInterface } from '../core/config/config.interface.js';
+import { RestSchema } from '../core/config/rest.schema.js';
 import type { LoggerInterface } from '../core/logger/logger.interface.js';
 import type { DatabaseClientInterface } from '../core/database-client/mongo-client.interface.js';
-import { RestSchema } from '../core/config/rest.schema.js';
 import { AppComponent } from '../types/app-component.enum.js';
 import { getMongoURI } from '../core/helpers/db.js';
 import { ControllerInterface } from '../core/controller/controller.interface.js';
 import { ExceptionFilterInterface } from '../core/expception-filters/exception-filter.interface.js';
 import { AuthenticateMiddleware } from '../core/middlewares/authenticate.middleware.js';
+
 
 @injectable()
 export default class RestApplication {

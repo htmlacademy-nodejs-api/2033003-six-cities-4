@@ -500,6 +500,8 @@ components:
           type: integer
         coordinates:
           $ref: '#/components/schemas/coordinates'
+        userId:
+          type: string
 
     returnedOffer:
       type: object

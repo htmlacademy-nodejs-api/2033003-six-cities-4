@@ -1,12 +1,12 @@
 import * as crypto from 'node:crypto';
 
 import * as jose from 'jose';
-
+import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 import { plainToInstance, ClassConstructor } from 'class-transformer';
 
 import type { CityCoordinates } from '../../types/city-coordinates.type.js';
 import { City } from '../../types/city.enum.js';
-import { cityCoordinates } from '../../const.js';
+import { cityCoordinates } from '../../modules/offer/offer.const.js';
 
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
@@ -48,4 +48,23 @@ export async function createJWT(algorithm: string, jwtSecret: string, payload: o
     .setIssuedAt()
     .setExpirationTime(expirationTime)
     .sign(crypto.createSecretKey(jwtSecret, 'utf-8'));
+}
+
+@ValidatorConstraint({ name: 'IsValidCoordinates', async: false })
+export class IsValidCoordinates implements ValidatorConstraintInterface {
+  validate(coordinates: CityCoordinates) {
+    if (
+      typeof coordinates === 'object' &&
+      typeof coordinates.latitude === 'number' &&
+      typeof coordinates.longitude === 'number'
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  defaultMessage() {
+    return 'Invalid coordinates';
+  }
 }

@@ -3,7 +3,8 @@ import { IsOptional, Validate, ArrayMinSize, ArrayMaxSize, IsNumber, IsArray, Is
 import { Amenities } from '../../../types/amenities.enum.js';
 import { CityCoordinates } from '../../../types/city-coordinates.type.js';
 import { RentalType } from '../../../types/rental-type.enum.js';
-import { IsValidCoordinates, cityCoordinates } from '../../../const.js';
+import { cityCoordinates } from '../offer.const.js';
+import { IsValidCoordinates } from '../../../core/helpers/common.js';
 
 export default class UpdateOfferDto {
   @IsOptional()
