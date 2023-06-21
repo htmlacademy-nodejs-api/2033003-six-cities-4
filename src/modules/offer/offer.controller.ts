@@ -140,7 +140,16 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const offer = await this.offerService.getOfferDetails(offerId);
-    this.ok(res, fillDTO(OfferRdo, offer));
+
+    const comments = await this.commentService.findByOfferId(offerId);
+    const commentIds = comments.map((comment) => comment.id);
+
+    const offerWithComments: RentalOffer = {
+      ...JSON.parse(JSON.stringify(offer)),
+      commentIds,
+    };
+
+    this.ok(res, fillDTO(OfferRdo, offerWithComments));
   }
 
   public async getComments(
