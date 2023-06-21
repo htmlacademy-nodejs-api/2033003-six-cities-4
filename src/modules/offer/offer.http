@@ -2,6 +2,7 @@
 ## Объявление по идентификатору
 
 GET http://localhost:4000/offers/648eee42ce55121b171f3dbb HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
 
 ###
 
