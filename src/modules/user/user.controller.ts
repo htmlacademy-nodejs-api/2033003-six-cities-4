@@ -60,7 +60,7 @@ export default class UserController extends Controller {
   }
 
   public async checkAuthenticate(req: Request, res: Response) {
-    if (!req.user ) {
+    if(!req.user){
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
         'Unauthorized',
