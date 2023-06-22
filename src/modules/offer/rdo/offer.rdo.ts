@@ -55,4 +55,7 @@ export default class OfferRdo {
 
   @Expose()
   public commentCount!: number;
+
+  @Expose()
+  public commentIds!: string[];
 }

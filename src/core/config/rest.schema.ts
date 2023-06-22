@@ -12,7 +12,10 @@ export type RestSchema = {
   DB_PORT: string;
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
-  JWT_SECRET: string;
+  JWT_SECRET:string;
+  EXPIRATION_TIME: string;
+  HOST: string;
+  STATIC_DIRECTORY_PATH: string;
 }
 
 export const configRestSchema = convict<RestSchema>({
@@ -68,6 +71,24 @@ export const configRestSchema = convict<RestSchema>({
     doc: 'Secret for sign JWT',
     format: String,
     env: 'JWT_SECRET',
+    default: null
+  },
+  EXPIRATION_TIME: {
+    doc: 'Time duration for token expiration',
+    format: String,
+    env: 'EXPIRATION_TIME',
+    default: null
+  },
+  HOST: {
+    doc: 'Host wrere started service',
+    format: String,
+    env: 'HOST',
+    default: 'localhost'
+  },
+  STATIC_DIRECTORY_PATH: {
+    doc: 'Path to directory with static files',
+    format: String,
+    env: 'STATIC_DIRECTORY_PATH',
     default: null
   }
 });

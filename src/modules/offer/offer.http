@@ -1,7 +1,8 @@
 # Объявления
 ## Объявление по идентификатору
 
-GET http://localhost:4000/offers/648eec37ce55121b171f3d57 HTTP/1.1
+GET http://localhost:4000/offers/648eee42ce55121b171f3dbb HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
 
 ###
 
@@ -9,7 +10,7 @@ GET http://localhost:4000/offers/648eec37ce55121b171f3d57 HTTP/1.1
 
 POST http://localhost:4000/offers/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
 
 {
   "title": "Роскошный отель в Брюсселе",
@@ -22,12 +23,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0I
   },
   "previewImage": "cologne-room.jpg",
   "images": [
-    "https://paris-apartment1.jpg",
-    "https://amsterdam-house1.jpg",
-    "https://cologne-room2.jpg",
-    "https://brussels-hotel2.jpg",
-    "https://brussels-hotel2.jpg",
-    "https://hamburg-villa2.jpg"
+    "paris-apartment1.jpg",
+    "amsterdam-house1.jpg",
+    "cologne-room2.jpg",
+    "brussels-hotel2.jpg",
+    "brussels-hotel2.jpg",
+    "hamburg-villa2.jpg"
   ],
   "isPremium": true,
   "isFavorite": true,
@@ -73,15 +74,15 @@ Content-Type: application/json
 
 ## Удаление существующего объявления
 
-DELETE http://localhost:4000/offers/648eec37ce55121b171f3d5c HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+DELETE http://localhost:4000/offers/648eec37ce55121b171f3d57 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
 
 ###
 
 ## Объявления в колличестве указанном в параметре limit
 
 GET http://localhost:4000/offers?limit=60 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcyODMwMDgsImV4cCI6MTY4NzQ1NTgwOH0.7HBupuMnuomXjLAFuOZaMJKzRsqCvwcYosG9DYjt3LY
 
 ###
 

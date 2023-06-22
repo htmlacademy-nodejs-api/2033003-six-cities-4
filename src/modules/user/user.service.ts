@@ -6,7 +6,7 @@ import { UserEntity } from './user.entity.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import type {UserServiceInterface} from './user-service.interface.js';
 import type { LoggerInterface } from '../../core/logger/logger.interface.js';
-import { MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from './user.const.js';
+import { DEFAULT_AVATAR_FILE_NAME, MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from './user.const.js';
 import UpdateUserDto from './dto/update-user.dto.js';
 import type { MongoId } from '../../types/mongoId.type.js';
 import LoginUserDto from './dto/login-user.dto.js';
@@ -25,7 +25,7 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    const user = new UserEntity(dto);
+    const user = new UserEntity({...dto, avatar: DEFAULT_AVATAR_FILE_NAME});
 
     if (dto.password.length < MIN_LENGTH_PASSWORD || dto.password.length > MAX_LENGTH_PASSWORD) {
       throw new Error(`Password should be between ${MIN_LENGTH_PASSWORD} and ${MAX_LENGTH_PASSWORD} characters.`);

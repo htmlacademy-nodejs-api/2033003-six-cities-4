@@ -11,7 +11,6 @@ import type { MongoId } from '../../types/mongoId.type.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import { DEFAULT_OFFERS_COUNT, DEFAULT_PREMIUM_OFFERS_COUNT } from './offer.const.js';
 
-
 @injectable()
 export default class OfferService implements OfferServiceInterface {
   constructor(

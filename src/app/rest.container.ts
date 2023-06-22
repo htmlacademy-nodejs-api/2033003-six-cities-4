@@ -1,16 +1,16 @@
 import { Container } from 'inversify';
 
-import RestApplication from './rest.js';
 import { AppComponent } from '../types/app-component.enum.js';
-import type { LoggerInterface } from '../core/logger/logger.interface.js';
-import PinoService from '../core/logger/pino.service.js';
-import type { ConfigInterface } from '../core/config/config.interface.js';
 import { RestSchema } from '../core/config/rest.schema.js';
+import type { ConfigInterface } from '../core/config/config.interface.js';
 import ConfigService from '../core/config/config.service.js';
 import type { DatabaseClientInterface } from '../core/database-client/mongo-client.interface.js';
 import MongoClientService from '../core/database-client/database-client.service.js';
 import type { ExceptionFilterInterface } from '../core/expception-filters/exception-filter.interface.js';
 import ExceptionFilter from '../core/expception-filters/exception-filter.js';
+import type { LoggerInterface } from '../core/logger/logger.interface.js';
+import PinoService from '../core/logger/pino.service.js';
+import RestApplication from './rest.js';
 
 export function createRestApplicationContainer() {
   const restApplicationContainer = new Container();

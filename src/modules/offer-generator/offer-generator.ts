@@ -24,7 +24,7 @@ export default class OfferGenerator implements OfferGeneratorInterface {
     const rooms = generateRandomValue(MIN_COUNT_OFFER_ROOMS, MAX_COUNT_OFFER_ROOMS).toString();
     const guests = generateRandomValue(MIN_COUNT_OFFER_GUESTS, MAX_COUNT_OFFER_GUESTS).toString();
     const price = generateRandomValue(MIN_OFFER_PRICE, MAX_OFFER_PRICE).toString();
-    const amenities = getRandomItems<string>(this.mockData.amenities).join(';');
+    const amenities = getRandomItems<string>(this.mockData.amenities, 2).join(';');
     const user = objectToString(getRandomItem(this.mockData.users));
     const coordinates = objectToString(getCoordinates(city));
 

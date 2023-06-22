@@ -8,7 +8,6 @@ import type { DatabaseClientInterface } from '../database-client/mongo-client.in
 import ConsoleLoggerService from '../logger/console.service.js';
 import type { LoggerInterface } from '../logger/logger.interface.js';
 import type { CliCommandInterface } from './cli-command.interface.js';
-
 import { UserModel } from '../../modules/user/user.entity.js';
 import type { UserServiceInterface } from '../../modules/user/user-service.interface.js';
 import UserService from '../../modules/user/user.service.js';
@@ -17,8 +16,8 @@ import OfferService from '../../modules/offer/offer.service.js';
 import { OfferModel } from '../../modules/offer/offer.entity.js';
 import { CityCoordinates } from '../../types/city-coordinates.type.js';
 import { DEFAULT_USER_PASSWORD } from './import.command.const.js';
-import { cityCoordinates } from '../../const.js';
 import ConfigService from '../config/config.service.js';
+import { cityCoordinates } from '../../modules/offer/offer.const.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';

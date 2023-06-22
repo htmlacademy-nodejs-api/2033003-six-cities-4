@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import * as core from 'express-serve-static-core';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 import { Controller } from '../../core/controller/controller.abstract.js';
 import { LoggerInterface } from '../../core/logger/logger.interface.js';
@@ -20,27 +21,55 @@ import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
+import { StatusCodes } from 'http-status-codes';
+import HttpError from '../../core/errors/http-error.js';
+import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
+import { ConfigInterface } from '../../core/config/config.interface.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
+import UploadImageResponse from './rdo/upload-image.response.js';
+
+type ParamsOfferDetails = {
+  offerId: string;
+} | ParamsDictionary
 
 @injectable()
 export default class OfferController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) logger: LoggerInterface,
     @inject(AppComponent.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
-    @inject(AppComponent.CommentServiceInterface) private readonly commentService: CommentServiceInterface
+    @inject(AppComponent.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
+    @inject(AppComponent.ConfigInterface) configService: ConfigInterface<RestSchema>,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for OfferController…');
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers, middlewares: [new PrivateRouteMiddleware()] });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
     this.addRoute({path: '/favorites/:offerId', method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.createOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateDtoMiddleware(CreateOfferDto)]});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
     this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({
+      path: '/:offerId/image',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+      ]
+    });
+  }
+
+  public async uploadImage(req: Request<ParamsOfferDetails>, res: Response) {
+    const {offerId} = req.params;
+    const updateDto = { previewImage: req.file?.filename };
+    await this.offerService.update(offerId, updateDto);
+    this.created(res, fillDTO(UploadImageResponse, {updateDto}));
   }
 
   public async addToFavorites(
@@ -96,11 +125,20 @@ export default class OfferController extends Controller {
   }
 
   public async deleteOffer(
-    {params}: Request<core.ParamsDictionary | ParamsGetOffer>,
+    {params, user}: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const {offerId} = params;
     const deletedOffer = await this.offerService.delete(offerId);
+
+    if (deletedOffer?.userId?.toString() !== user.id) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'You are not the owner of the offer',
+        'UserController'
+      );
+    }
+
     await this.commentService.deleteByOfferId(offerId);
     this.ok(res, fillDTO(OfferRdo, deletedOffer));
   }
@@ -129,7 +167,16 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const offer = await this.offerService.getOfferDetails(offerId);
-    this.ok(res, fillDTO(OfferRdo, offer));
+
+    const comments = await this.commentService.findByOfferId(offerId);
+    const commentIds = comments.map((comment) => comment.id);
+
+    const offerWithComments: RentalOffer = {
+      ...JSON.parse(JSON.stringify(offer)),
+      commentIds,
+    };
+
+    this.ok(res, fillDTO(OfferRdo, offerWithComments));
   }
 
   public async getComments(
