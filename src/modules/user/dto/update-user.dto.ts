@@ -11,11 +11,11 @@ export default class UpdateUserDto {
   public email?: string;
 
   @IsOptional()
-  @MinLength(6, { message: 'Minimum password length must be 6' })
-  @MaxLength(12, { message: 'Maximum password length must be 12' })
-  public password!: string;
-
-  @IsOptional()
   @Matches(/\.(jpg|png)$/, { message: 'Avatar must be in JPG or PNG format' })
   public avatar?: string;
+
+  @IsOptional()
+  @MinLength(6, { message: 'Minimum password length must be 6' })
+  @MaxLength(12, { message: 'Maximum password length must be 12' })
+  public password?: string;
 }

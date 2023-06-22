@@ -1,7 +1,7 @@
 import { Amenities } from '../../../types/amenities.enum.js';
 import { CityCoordinates } from '../../../types/city-coordinates.type.js';
 import { RentalType } from '../../../types/rental-type.enum.js';
-import { Validate, IsNotEmpty, ArrayMinSize, ArrayMaxSize, IsNumber, IsArray, IsDateString, IsEnum, IsInt, Max, MaxLength, Min, MinLength, IsBoolean, IsString, IsIn } from 'class-validator';
+import { Validate, IsNotEmpty, ArrayMinSize, ArrayMaxSize, IsNumber, IsArray, IsDateString, IsEnum, IsInt, Max, MaxLength, Min, MinLength, IsBoolean, IsIn } from 'class-validator';
 import { City } from '../../../types/city.enum.js';
 import { IsValidCoordinates } from '../../../core/helpers/common.js';
 import { cityCoordinates } from '../offer.const.js';
@@ -28,10 +28,6 @@ export default class CreateOfferDto {
   @IsNotEmpty({ message: 'Coordinates are required' })
   @Validate(IsValidCoordinates)
   public coordinates!: CityCoordinates;
-
-  @IsNotEmpty({ message: 'Preview Image are required' })
-  @IsString({ message: 'Preview Image must be an string' })
-  public previewImage!: string;
 
   @IsNotEmpty({ message: 'Images are required' })
   @IsArray()

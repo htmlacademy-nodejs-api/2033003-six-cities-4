@@ -31,3 +31,4 @@ export const cityCoordinates: Record<City, CityCoordinates> = {
   [City.Hamburg]: { latitude: 53.550341, longitude: 10.000654 },
   [City.Dusseldorf]: { latitude: 51.225402, longitude: 6.776314 }
 };
+

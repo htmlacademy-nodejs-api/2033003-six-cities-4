@@ -6,13 +6,19 @@ import asyncHandler from 'express-async-handler';
 import type { ControllerInterface } from './controller.interface.js';
 import type { LoggerInterface } from '../logger/logger.interface.js';
 import type { RouteInterface } from '../../types/route.interface.js';
+import { ConfigInterface } from '../config/config.interface.js';
+import { RestSchema } from '../config/rest.schema.js';
+import { UnknownRecord } from '../../types/unknown-record.type.js';
+import { getFullServerPath, transformObject } from '../helpers/common.js';
+import { STATIC_RESOURCE_FIELDS } from '../../app/rest.const.js';
 
 @injectable()
 export abstract class Controller implements ControllerInterface {
   private readonly _router: Router;
 
   constructor(
-    protected readonly logger: LoggerInterface
+    protected readonly logger: LoggerInterface,
+    protected readonly configService: ConfigInterface<RestSchema>,
   ) {
     this._router = Router();
   }
@@ -33,6 +39,7 @@ export abstract class Controller implements ControllerInterface {
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
+    this.addStaticPath(data as UnknownRecord);
     res
       .type('application/json')
       .status(statusCode)
@@ -49,5 +56,15 @@ export abstract class Controller implements ControllerInterface {
 
   public ok<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.OK, data);
+  }
+
+  protected addStaticPath(data: UnknownRecord): void {
+    const fullServerPath = getFullServerPath(this.configService.get('HOST'), this.configService.get('PORT'));
+    transformObject(
+      STATIC_RESOURCE_FIELDS,
+      `${fullServerPath}/${this.configService.get('STATIC_DIRECTORY_PATH')}`,
+      `${fullServerPath}/${this.configService.get('UPLOAD_DIRECTORY')}`,
+      data
+    );
   }
 }

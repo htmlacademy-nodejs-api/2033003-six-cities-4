@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import * as core from 'express-serve-static-core';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 import { Controller } from '../../core/controller/controller.abstract.js';
 import { LoggerInterface } from '../../core/logger/logger.interface.js';
@@ -22,15 +23,24 @@ import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.mid
 import { RentalOffer } from '../../types/rental-offer.type.js';
 import { StatusCodes } from 'http-status-codes';
 import HttpError from '../../core/errors/http-error.js';
+import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
+import { ConfigInterface } from '../../core/config/config.interface.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
+import UploadImageResponse from './rdo/upload-image.response.js';
+
+type ParamsOfferDetails = {
+  offerId: string;
+} | ParamsDictionary
 
 @injectable()
 export default class OfferController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) logger: LoggerInterface,
     @inject(AppComponent.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
-    @inject(AppComponent.CommentServiceInterface) private readonly commentService: CommentServiceInterface
+    @inject(AppComponent.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
+    @inject(AppComponent.ConfigInterface) configService: ConfigInterface<RestSchema>,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for OfferController…');
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavoriteOffers, middlewares: [new PrivateRouteMiddleware()] });
@@ -43,6 +53,23 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
     this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({
+      path: '/:offerId/image',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+      ]
+    });
+  }
+
+  public async uploadImage(req: Request<ParamsOfferDetails>, res: Response) {
+    const {offerId} = req.params;
+    const updateDto = { previewImage: req.file?.filename };
+    await this.offerService.update(offerId, updateDto);
+    this.created(res, fillDTO(UploadImageResponse, {updateDto}));
   }
 
   public async addToFavorites(

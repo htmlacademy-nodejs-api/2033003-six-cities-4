@@ -1,5 +1,3 @@
-import path from 'node:path';
-
 import typegoose, { defaultClasses } from '@typegoose/typegoose';
 
 import { UserType } from '../../types/user-type.enum.js';
@@ -9,8 +7,6 @@ import CreateUserDto from './dto/create-user.dto.js';
 import { MAX_LENGTH_USERNAME, MIN_LENGTH_USERNAME } from './user.const.js';
 
 const { prop, modelOptions, getModelForClass } = typegoose;
-
-const imagePath = path.resolve('./assets/default-avatar.png');
 
 export interface UserEntity extends defaultClasses.Base {}
 
@@ -27,7 +23,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ unique: true, required: true })
   public email: string;
 
-  @prop({ required: true, default: imagePath })
+  @prop({ required: true })
   public avatar: string;
 
   @prop({ required: true })

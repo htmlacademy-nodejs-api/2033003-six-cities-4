@@ -23,12 +23,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0I
   },
   "previewImage": "cologne-room.jpg",
   "images": [
-    "https://paris-apartment1.jpg",
-    "https://amsterdam-house1.jpg",
-    "https://cologne-room2.jpg",
-    "https://brussels-hotel2.jpg",
-    "https://brussels-hotel2.jpg",
-    "https://hamburg-villa2.jpg"
+    "paris-apartment1.jpg",
+    "amsterdam-house1.jpg",
+    "cologne-room2.jpg",
+    "brussels-hotel2.jpg",
+    "brussels-hotel2.jpg",
+    "hamburg-villa2.jpg"
   ],
   "isPremium": true,
   "isFavorite": true,

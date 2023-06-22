@@ -37,7 +37,7 @@ export class OfferEntity extends defaultClasses.TimeStamps{
   @prop({ required: true, type: Schema.Types.Mixed })
   public coordinates!: CityCoordinates;
 
-  @prop({ required: true })
+  @prop({ required: true , default: ''})
   public previewImage!: string;
 
   @prop({ required: true, type: [String] })
