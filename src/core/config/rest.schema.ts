@@ -89,6 +89,6 @@ export const configRestSchema = convict<RestSchema>({
     doc: 'Path to directory with static files',
     format: String,
     env: 'STATIC_DIRECTORY_PATH',
-    default: 'static'
+    default: null
   }
 });
