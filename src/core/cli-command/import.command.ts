@@ -66,7 +66,14 @@ export default class ImportCommand implements CliCommandInterface {
     this.databaseService.disconnect();
   }
 
-  public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
+  public async execute(
+    filename: string = './mocks/test-data.tsv',
+    login: string = 'admin',
+    password: string = 'test',
+    host: string = 'localhost',
+    dbname: string = 'six-cities',
+    salt: string = 'secret'
+    ): Promise<void> {
     const defaulDbPort = this.configService.get('DB_PORT');
     const uri = getMongoURI(login, password, host, defaulDbPort, dbname);
     this.salt = salt;
