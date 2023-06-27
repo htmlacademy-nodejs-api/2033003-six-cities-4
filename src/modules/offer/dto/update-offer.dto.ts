@@ -5,6 +5,7 @@ import { CityCoordinates } from '../../../types/city-coordinates.type.js';
 import { RentalType } from '../../../types/rental-type.enum.js';
 import { cityCoordinates } from '../offer.const.js';
 import { IsValidCoordinates } from '../../../core/helpers/common.js';
+import { User } from '../../../types/user.type.js';
 
 export default class UpdateOfferDto {
   @IsOptional()
@@ -81,7 +82,7 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsMongoId({message: 'Author field must be valid an id'})
-  public userId?: string;
+  public userId?: User;
 
   @IsOptional()
   @IsInt({ message: 'Comment count must be an integer' })

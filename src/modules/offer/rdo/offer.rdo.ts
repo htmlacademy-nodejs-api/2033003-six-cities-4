@@ -6,6 +6,9 @@ import { Amenities } from '../../../types/amenities.enum.js';
 
 export default class OfferRdo {
   @Expose()
+  public id!: string;
+
+  @Expose()
   public title!: string;
 
   @Expose()

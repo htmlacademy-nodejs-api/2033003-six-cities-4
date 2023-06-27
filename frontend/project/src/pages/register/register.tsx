@@ -27,7 +27,7 @@ const Register = (): JSX.Element => {
     const formData = new FormData(form) as Iterable<[UserRegister]>;
     const data = Object.fromEntries(formData);
 
-    data.type = data.isPro ? UserType.Pro : UserType.Regular;
+    data.userType = data.isPro ? UserType.Pro : UserType.Regular;
     delete data.isPro;
     dispatch(registerUser(data));
   };
@@ -85,7 +85,7 @@ const Register = (): JSX.Element => {
                 type="file"
                 name="avatar"
                 id="avatar"
-                accept="image/png, image/jpeg"
+                accept="image/png, image/jpg"
                 onChange={handleAvatarUpload}
               />
               <label htmlFor="avatar" className="register-form__avatar-label">

@@ -49,7 +49,7 @@ export default class OfferService implements OfferServiceInterface {
     return this.findOffers({}, limit);
   }
 
-  public async getPremiumOffersForCity(city: string): Promise<DocumentType<OfferEntity>[]> {
+  public async getPremiumOffersForCity(city?: string): Promise<DocumentType<OfferEntity>[]> {
     const query = { city: city, isPremium: true };
     return this.findOffers(query, DEFAULT_PREMIUM_OFFERS_COUNT);
   }

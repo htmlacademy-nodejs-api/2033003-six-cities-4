@@ -21,6 +21,8 @@ export const MAX_COUNT_OFFER_GUESTS = 10;
 
 export const DEFAULT_OFFERS_COUNT = 60;
 
+export const MAX_COUNT_OFFER_IMAGES = 6;
+
 export const DEFAULT_PREMIUM_OFFERS_COUNT = 3;
 
 export const cityCoordinates: Record<City, CityCoordinates> = {
@@ -31,4 +33,3 @@ export const cityCoordinates: Record<City, CityCoordinates> = {
   [City.Hamburg]: { latitude: 53.550341, longitude: 10.000654 },
   [City.Dusseldorf]: { latitude: 51.225402, longitude: 6.776314 }
 };
-

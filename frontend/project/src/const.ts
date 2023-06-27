@@ -43,13 +43,15 @@ export enum AppRoute {
 
 export enum ApiRoute {
   Offers = '/offers',
-  Login = '/login',
+  Users = '/users',
+  Login = '/users/login',
   Logout = '/logout',
-  Register = '/register',
+  Register = '/users/register',
   Avatar = '/avatar',
   Comments = '/comments',
-  Favorite = '/favorites',
-  Premium = '/premium',
+  Favorite = '/offers/favorites',
+  Premium = '/offers/premium',
+  PreviewImage = '/previewImage',
 }
 
 export enum AuthorizationStatus {
@@ -77,8 +79,12 @@ export enum StoreSlice {
 }
 
 export enum HttpCode {
-  NotFound = 404,
-  NoAuth = 401,
+  OK = 200,
+  CREATED = 201,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  NOT_FOUND = 404,
+  CONFLICT = 409,
 }
 
 export enum SubmitStatus {
