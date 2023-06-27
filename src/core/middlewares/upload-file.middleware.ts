@@ -36,9 +36,9 @@ export class UploadFileMiddleware implements MiddlewareInterface {
       storage,
       fileFilter: (_req, file, callback) => {
         if (this.isFileExtensionAllowed(file.originalname)) {
-          callback(null, true);
+          return callback(null, true);
         } else {
-          callback(new Error('Bad Request - Invalid file extension'));
+          return callback(new Error('Bad Request - Invalid file extension'));
         }
       },
     }).single(this.fieldName);

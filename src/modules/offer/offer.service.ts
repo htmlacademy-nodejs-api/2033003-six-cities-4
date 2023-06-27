@@ -63,10 +63,10 @@ export default class OfferService implements OfferServiceInterface {
       return [];
     }
 
-  const favoriteOfferIds = user.favorites;
-  const query = { _id: { $in: favoriteOfferIds }, isFavorite: true };
+    const favoriteOfferIds = user.favorites;
+    const query = { _id: { $in: favoriteOfferIds }, isFavorite: true };
 
-  return this.findOffers(query);
+    return this.findOffers(query);
   }
 
   public async addToFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
@@ -74,7 +74,7 @@ export default class OfferService implements OfferServiceInterface {
     if (!offer) {
       return null;
     }
-  
+
     await this.userModel.findOneAndUpdate(
       { _id: userId },
       { $addToSet: { favorites: offerId } },
@@ -89,20 +89,20 @@ export default class OfferService implements OfferServiceInterface {
 
   public async removeFromFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     const offer = await this.offerModel.findById(offerId).exec();
-  if (!offer) {
-    return null;
-  }
+    if (!offer) {
+      return null;
+    }
 
-  await this.userModel.findOneAndUpdate(
-    { _id: userId },
-    { $pull: { favorites: offerId } },
-    { new: true }
-  ).exec();
+    await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { favorites: offerId } },
+      { new: true }
+    ).exec();
 
-  offer.isFavorite = false;
-  await offer.save();
+    offer.isFavorite = false;
+    await offer.save();
 
-  return offer;
+    return offer;
   }
 
   public async incCommentCount(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {

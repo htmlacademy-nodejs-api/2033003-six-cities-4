@@ -36,7 +36,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.logger = new ConsoleLoggerService();
     this.configService = new ConfigService(this.logger);
     this.userService = new UserService(this.logger, UserModel);
-    this.offerService = new OfferService(this.logger, OfferModel);
+    this.offerService = new OfferService(this.logger, OfferModel, UserModel);
     this.databaseService = new MongoClientService(this.logger);
   }
 

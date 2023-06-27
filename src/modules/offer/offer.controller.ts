@@ -89,7 +89,7 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const { id }= user;
+    const { id } = user;
     const removedFromFavorites = await this.offerService.removeFromFavorites(offerId, id);
     this.ok(res, fillDTO(OfferRdo, removedFromFavorites));
   }
@@ -107,7 +107,7 @@ export default class OfferController extends Controller {
     { user }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
-    const { id }= user;
+    const { id } = user;
     const offers = await this.offerService.getFavoriteOffers(id);
     this.ok(res, fillDTO(OfferRdo, offers));
   }
