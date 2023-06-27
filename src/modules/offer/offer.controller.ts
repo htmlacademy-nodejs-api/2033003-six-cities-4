@@ -151,7 +151,7 @@ export default class OfferController extends Controller {
     const isAuthorized = !!user;
 
     const offers = await this.offerService.find(Number(limit));
-    
+
     const offersWithFavoriteFlag: DocumentType<OfferEntity>[] = offers.map((offer) => ({
       ...JSON.parse(JSON.stringify(offer)),
       id: offer?.id,
@@ -167,7 +167,7 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const {offerId} = params;
     const deletedOffer = await this.offerService.getOfferDetails(offerId);
-    
+
     if (deletedOffer?.userId?.toString() !== user.id) {
       throw new HttpError(
         StatusCodes.FORBIDDEN,

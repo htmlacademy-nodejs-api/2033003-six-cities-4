@@ -41,11 +41,11 @@ export default class OfferService implements OfferServiceInterface {
   private async findOffers(query: object, limit?: number): Promise<DocumentType<OfferEntity>[]> {
     const offerLimit = limit || DEFAULT_OFFERS_COUNT;
     const offers = await this.offerModel
-    .find(query)
-    .populate([PopulateField.UserId])
-    .sort({ publicationDate: SortType.Down })
-    .limit(offerLimit)
-    .exec();
+      .find(query)
+      .populate([PopulateField.UserId])
+      .sort({ publicationDate: SortType.Down })
+      .limit(offerLimit)
+      .exec();
 
     return offers;
   }
