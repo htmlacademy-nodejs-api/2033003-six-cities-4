@@ -7,3 +7,11 @@ export const STATIC_RESOURCE_FIELDS = [
   'previewImage',
   'images'
 ];
+
+export enum RestRoute {
+  USERS = '/users',
+  OFFERS = '/offers',
+  COMMENTS = '/comments',
+  UPLOAD = '/upload',
+  STATIC = '/static',
+}
