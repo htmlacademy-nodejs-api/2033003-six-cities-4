@@ -28,6 +28,7 @@ import { ConfigInterface } from '../../core/config/config.interface.js';
 import { RestSchema } from '../../core/config/rest.schema.js';
 import UploadImageResponse from './rdo/upload-image.response.js';
 import { OfferControllerRoute } from './offer.const.js';
+import { EnvConfig, PopulateField } from '../../app/rest.const.js';
 
 type ParamsOfferDetails = {
   offerId: string;
@@ -45,23 +46,23 @@ export default class OfferController extends Controller {
 
     this.logger.info('Register routes for OfferController…');
     this.addRoute({ path: OfferControllerRoute.FAVORITES, method: HttpMethod.Get, handler: this.getFavoriteOffers, middlewares: [new PrivateRouteMiddleware()] });
-    this.addRoute({ path: OfferControllerRoute.ADD_TO_FAVORITES, method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
-    this.addRoute({ path: OfferControllerRoute.REMOVE_FROM_FAVORITES, method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')] });
-    this.addRoute({ path: OfferControllerRoute.OFFER_DETAILS, method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({ path: OfferControllerRoute.ADD_TO_FAVORITES, method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)] });
+    this.addRoute({ path: OfferControllerRoute.REMOVE_FROM_FAVORITES, method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)] });
+    this.addRoute({ path: OfferControllerRoute.OFFER_DETAILS, method: HttpMethod.Get, handler: this.showOfferDetails, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
     this.addRoute({ path: OfferControllerRoute.CREATE_OFFER, method: HttpMethod.Post, handler: this.createOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateDtoMiddleware(CreateOfferDto)]});
     this.addRoute({ path: OfferControllerRoute.INDEX, method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: OfferControllerRoute.UPDATE, method: HttpMethod.Put, handler: this.update, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
-    this.addRoute({ path: OfferControllerRoute.DELETE_OFFER, method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({ path: OfferControllerRoute.UPDATE, method: HttpMethod.Put, handler: this.update, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
+    this.addRoute({ path: OfferControllerRoute.DELETE_OFFER, method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
     this.addRoute({ path: OfferControllerRoute.PREMIUM_OFFERS_FOR_CITY, method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
-    this.addRoute({ path: OfferControllerRoute.GET_COMMENTS, method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')]});
+    this.addRoute({ path: OfferControllerRoute.GET_COMMENTS, method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
     this.addRoute({
       path: OfferControllerRoute.UPLOAD_IMAGE,
       method: HttpMethod.Post,
       handler: this.uploadImage,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+        new ValidateObjectIdMiddleware(PopulateField.OfferId),
+        new UploadFileMiddleware(this.configService.get(EnvConfig.UPLOAD_DIRECTORY), 'image'),
       ]
     });
   }
@@ -74,20 +75,22 @@ export default class OfferController extends Controller {
   }
 
   public async addToFavorites(
-    { params }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { params, user }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const addedToFavorites = await this.offerService.addToFavorites(offerId);
+    const { id } = user;
+    const addedToFavorites = await this.offerService.addToFavorites(offerId, id);
     this.ok(res, fillDTO(OfferRdo, addedToFavorites));
   }
 
   public async removeFromFavorites(
-    { params }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { params, user }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const removedFromFavorites = await this.offerService.removeFromFavorites(offerId);
+    const { id }= user;
+    const removedFromFavorites = await this.offerService.removeFromFavorites(offerId, id);
     this.ok(res, fillDTO(OfferRdo, removedFromFavorites));
   }
 
@@ -101,28 +104,29 @@ export default class OfferController extends Controller {
   }
 
   public async getFavoriteOffers(
-    _req: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { user }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
-    const offers = await this.offerService.getFavoriteOffers();
+    const { id }= user;
+    const offers = await this.offerService.getFavoriteOffers(id);
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
   public async index(
-    { query, user }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const { limit } = query;
-    const isAuthorized = !!user;
+    //const isAuthorized = !!user;
 
     const offers = await this.offerService.find(Number(limit));
 
-    const offersWithFavoriteFlag: RentalOffer[] = offers.map((offer) => ({
-      ...JSON.parse(JSON.stringify(offer)),
-      isFavorite: isAuthorized ? offer.isFavorite : false,
-    }));
+    // const offersWithFavoriteFlag: RentalOffer[] = offers.map((offer) => ({
+    //   ...JSON.parse(JSON.stringify(offer)),
+    //   isFavorite: isAuthorized ? offer.isFavorite : false,
+    // }));
 
-    this.ok(res, fillDTO(OfferRdo, offersWithFavoriteFlag || []));
+    this.ok(res, fillDTO(OfferRdo, offers || []));
   }
 
   public async deleteOffer(

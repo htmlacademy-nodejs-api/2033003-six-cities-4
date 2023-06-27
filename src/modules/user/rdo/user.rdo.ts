@@ -15,4 +15,7 @@ export default class UserRdo {
 
   @Expose()
   public type!: string;
+
+  @Expose()
+  public favorites!: string[];
 }

@@ -24,8 +24,9 @@ import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middlew
 import { JWT_ALGORITHM, UserControllerRoute } from './user.const.js';
 import LoggedUserRdo from './rdo/logged-user.rdo.js';
 import type { UnknownRecord } from '../../types/unknown-record.type.js';
-import { UserExistsByEmailMiddleware } from '../../core/middlewares/UserExistsByEmailMiddleware.js';
+import { UserExistsByEmailMiddleware } from '../../core/middlewares/user-exists-by-email-middleware.js';
 import UploadUserAvatarResponse from './rdo/upload-user-avatar.response.js';
+import { EnvConfig, PopulateField } from '../../app/rest.const.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -60,8 +61,8 @@ export default class UserController extends Controller {
       method: HttpMethod.Put,
       handler: this.updateById,
       middlewares: [
-        new ValidateObjectIdMiddleware('userId'),
-        new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
+        new ValidateObjectIdMiddleware(PopulateField.UserId),
+        new DocumentExistsMiddleware(this.userService, 'User', PopulateField.UserId),
         new ValidateDtoMiddleware(UpdateUserDto)
       ]
     });
@@ -70,9 +71,9 @@ export default class UserController extends Controller {
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        new ValidateObjectIdMiddleware('userId'),
-        new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
-        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+        new ValidateObjectIdMiddleware(PopulateField.UserId),
+        new DocumentExistsMiddleware(this.userService, 'User', PopulateField.UserId),
+        new UploadFileMiddleware(this.configService.get(EnvConfig.UPLOAD_DIRECTORY), 'avatar'),
       ]
     });
     this.addRoute({
@@ -139,7 +140,7 @@ export default class UserController extends Controller {
   ): Promise<void> {
     const user = await this
       .userService
-      .verifyUser(body, this.configService.get('SALT'));
+      .verifyUser(body, this.configService.get(EnvConfig.SALT));
 
     if (!user) {
       throw new HttpError(
@@ -151,12 +152,12 @@ export default class UserController extends Controller {
 
     const token = await createJWT(
       JWT_ALGORITHM,
-      this.configService.get('JWT_SECRET'),
+      this.configService.get(EnvConfig.JWT_SECRET),
       {
         email: user.email,
         id: user.id
       },
-      this.configService.get('EXPIRATION_TIME')
+      this.configService.get(EnvConfig.EXPIRATION_TIME)
     );
 
     this.ok(res, {
@@ -179,7 +180,7 @@ export default class UserController extends Controller {
       );
     }
 
-    const result = await this.userService.create(body, this.configService.get('SALT'));
+    const result = await this.userService.create(body, this.configService.get(EnvConfig.SALT));
     this.created(
       res,
       fillDTO(UserRdo, result)

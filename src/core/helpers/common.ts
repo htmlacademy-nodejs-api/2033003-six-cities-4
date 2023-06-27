@@ -26,12 +26,10 @@ export const comparePassword = (password: string, hashedPassword: string, salt: 
 
 export function getCoordinates(city: string): CityCoordinates {
   const cityEnum: City = City[city as keyof typeof City];
-  if (cityEnum) {
-    const { latitude, longitude } = cityCoordinates[cityEnum];
-    return { latitude, longitude };
-  } else {
+  if (!cityEnum) {
     throw new Error('Invalid city');
   }
+  return cityCoordinates[cityEnum];
 }
 
 export function createErrorObject(message: string) {
