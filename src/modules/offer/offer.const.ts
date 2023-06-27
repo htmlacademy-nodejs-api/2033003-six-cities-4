@@ -47,7 +47,7 @@ export enum OfferControllerRoute {
   INDEX = '/',
   UPDATE = '/:offerId',
   DELETE_OFFER = '/:offerId',
-  PREMIUM_OFFERS_FOR_CITY = '/premium/:city',
+  PREMIUM_OFFERS_FOR_CITY = '/premium',
   GET_COMMENTS = '/:offerId/comments',
   UPLOAD_IMAGE = '/:offerId/image',
 }

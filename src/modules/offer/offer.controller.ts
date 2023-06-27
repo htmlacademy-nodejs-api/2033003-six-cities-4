@@ -20,7 +20,6 @@ import UpdateOfferDto from './dto/update-offer.dto.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
-import { RentalOffer } from '../../types/rental-offer.type.js';
 import { StatusCodes } from 'http-status-codes';
 import HttpError from '../../core/errors/http-error.js';
 import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
@@ -30,6 +29,9 @@ import UploadImageResponse from './rdo/upload-image.response.js';
 import { OfferControllerRoute } from './offer.const.js';
 import { EnvConfig, PopulateField } from '../../app/rest.const.js';
 import { City } from '../../types/city.enum.js';
+import { DocumentType } from '@typegoose/typegoose';
+import { OfferEntity } from './offer.entity.js';
+import { CommentEntity } from '../comment/comment.entity.js';
 
 type ParamsOfferDetails = {
   offerId: string;
@@ -46,6 +48,7 @@ export default class OfferController extends Controller {
     super(logger, configService);
 
     this.logger.info('Register routes for OfferController…');
+    this.addRoute({ path: OfferControllerRoute.PREMIUM_OFFERS_FOR_CITY, method: HttpMethod.Get, handler: this.getPremiumOffersForCity, middlewares: [new PrivateRouteMiddleware()]});
     this.addRoute({ path: OfferControllerRoute.FAVORITES, method: HttpMethod.Get, handler: this.getFavoriteOffers, middlewares: [new PrivateRouteMiddleware()] });
     this.addRoute({ path: OfferControllerRoute.ADD_TO_FAVORITES, method: HttpMethod.Post, handler: this.addToFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)] });
     this.addRoute({ path: OfferControllerRoute.REMOVE_FROM_FAVORITES, method: HttpMethod.Delete, handler: this.removeFromFavorites, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)] });
@@ -54,7 +57,6 @@ export default class OfferController extends Controller {
     this.addRoute({ path: OfferControllerRoute.INDEX, method: HttpMethod.Get, handler: this.index });
     this.addRoute({ path: OfferControllerRoute.UPDATE, method: HttpMethod.Put, handler: this.update, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new ValidateDtoMiddleware(UpdateOfferDto), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
     this.addRoute({ path: OfferControllerRoute.DELETE_OFFER, method: HttpMethod.Delete, handler: this.deleteOffer, middlewares: [new PrivateRouteMiddleware(), new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
-    this.addRoute({ path: OfferControllerRoute.PREMIUM_OFFERS_FOR_CITY, method: HttpMethod.Get, handler: this.getPremiumOffersForCity });
     this.addRoute({ path: OfferControllerRoute.GET_COMMENTS, method: HttpMethod.Get, handler: this.getComments, middlewares: [new ValidateObjectIdMiddleware(PopulateField.OfferId), new DocumentExistsMiddleware(this.offerService, 'Offer', PopulateField.OfferId)]});
     this.addRoute({
       path: OfferControllerRoute.UPLOAD_IMAGE,
@@ -95,8 +97,10 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { offerId } = params;
     const { id } = user;
+    //Тут не добавляется path к картинкам,
+    //видимо тут я что то делаю не так
     const addedToFavorites = await this.offerService.addToFavorites(offerId, id);
-    this.ok(res, fillDTO(OfferRdo, addedToFavorites));
+    this.ok(res, fillDTO(OfferRdo, addedToFavorites || []));
   }
 
   public async removeFromFavorites(
@@ -105,8 +109,10 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { offerId } = params;
     const { id } = user;
+    //Тут не добавляется path к картинкам,
+    //видимо тут я что то делаю не так
     const removedFromFavorites = await this.offerService.removeFromFavorites(offerId, id);
-    this.ok(res, fillDTO(OfferRdo, removedFromFavorites));
+    this.ok(res, fillDTO(OfferRdo, removedFromFavorites || []));
   }
 
   public async getPremiumOffersForCity(
@@ -123,6 +129,7 @@ export default class OfferController extends Controller {
         'UserController'
       );
     }
+
     const offers = await this.offerService.getPremiumOffersForCity(cityValue);
     this.ok(res, fillDTO(OfferRdo, offers || []));
   }
@@ -133,7 +140,7 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const { id } = user;
     const offers = await this.offerService.getFavoriteOffers(id);
-    this.ok(res, fillDTO(OfferRdo, offers));
+    this.ok(res, fillDTO(OfferRdo, offers || []));
   }
 
   public async index(
@@ -144,8 +151,8 @@ export default class OfferController extends Controller {
     const isAuthorized = !!user;
 
     const offers = await this.offerService.find(Number(limit));
-
-    const offersWithFavoriteFlag: RentalOffer[] = offers.map((offer) => ({
+    
+    const offersWithFavoriteFlag: DocumentType<OfferEntity>[] = offers.map((offer) => ({
       ...JSON.parse(JSON.stringify(offer)),
       id: offer?.id,
       isFavorite: isAuthorized ? offer.isFavorite : false,
@@ -196,18 +203,13 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const {offerId} = params;
-    const offer = await this.offerService.getOfferDetails(offerId);
+    const offer: DocumentType<OfferEntity> | null = await this.offerService.getOfferDetails(offerId);
 
-    const comments = await this.commentService.findByOfferId(offerId);
-    const commentIds = comments.map((comment) => comment.id);
-
-    const offerWithComments: RentalOffer = {
-      ...JSON.parse(JSON.stringify(offer)),
-      id: offer?.id,
-      commentIds,
-    };
-
-    this.ok(res, fillDTO(OfferRdo, offerWithComments));
+    const comments: DocumentType<CommentEntity>[] = await this.commentService.findByOfferId(offerId);
+    const commentIds: string[] = comments.map((comment) => comment.id);
+    //Тут не добавляется path к картинкам,
+    //видимо тут я что то делаю не так
+    this.ok(res, fillDTO(OfferRdo, {...offer?.toJSON(), id: offer?.id, commentIds}));
   }
 
   public async getComments(

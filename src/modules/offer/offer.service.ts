@@ -40,12 +40,14 @@ export default class OfferService implements OfferServiceInterface {
 
   private async findOffers(query: object, limit?: number): Promise<DocumentType<OfferEntity>[]> {
     const offerLimit = limit || DEFAULT_OFFERS_COUNT;
-    return this.offerModel
-      .find(query)
-      .populate([PopulateField.UserId])
-      .sort({ publicationDate: SortType.Down })
-      .limit(offerLimit)
-      .exec();
+    const offers = await this.offerModel
+    .find(query)
+    .populate([PopulateField.UserId])
+    .sort({ publicationDate: SortType.Down })
+    .limit(offerLimit)
+    .exec();
+
+    return offers;
   }
 
   public async find(limit?: number): Promise<DocumentType<OfferEntity>[]> {
@@ -70,39 +72,27 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async addToFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
-    const offer = await this.offerModel.findById(offerId).exec();
-    if (!offer) {
-      return null;
-    }
-
     await this.userModel.findOneAndUpdate(
       { _id: userId },
       { $addToSet: { favorites: offerId } },
       { new: true }
     ).exec();
 
-    offer.isFavorite = true;
-    await offer.save();
-
-    return offer;
+    return this.offerModel
+      .findOneAndUpdate({ _id: offerId}, {$set: {isFavorite: true}}, {new: true})
+      .exec();
   }
 
   public async removeFromFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
-    const offer = await this.offerModel.findById(offerId).exec();
-    if (!offer) {
-      return null;
-    }
-
     await this.userModel.findOneAndUpdate(
       { _id: userId },
-      { $pull: { favorites: offerId } },
+      { $addToSet: { favorites: offerId } },
       { new: true }
     ).exec();
 
-    offer.isFavorite = false;
-    await offer.save();
-
-    return offer;
+    return this.offerModel
+      .findOneAndUpdate({ _id: offerId}, {$set: {isFavorite: false}}, {new: true})
+      .exec();
   }
 
   public async incCommentCount(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
@@ -124,5 +114,4 @@ export default class OfferService implements OfferServiceInterface {
       .populate([PopulateField.UserId])
       .exec();
   }
-
 }

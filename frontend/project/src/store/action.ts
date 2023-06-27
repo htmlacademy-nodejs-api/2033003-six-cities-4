@@ -256,6 +256,7 @@ export const adaptPreviewImageToServer =
 
     return formData;
   };
+
 export const adaptAvatarToServer =
   (file: string) => {
     const formData = new FormData();
