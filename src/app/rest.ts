@@ -12,6 +12,7 @@ import { ControllerInterface } from '../core/controller/controller.interface.js'
 import { ExceptionFilterInterface } from '../core/exception-filters/exception-filter.interface.js';
 import { AuthenticateMiddleware } from '../core/middlewares/authenticate.middleware.js';
 import { getFullServerPath } from '../core/helpers/common.js';
+import { RestRoute } from './rest.const.js';
 
 
 @injectable()
@@ -43,12 +44,12 @@ export default class RestApplication {
 
     this.expressApplication.use(express.json());
     this.expressApplication.use(
-      '/upload',
+      RestRoute.UPLOAD,
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
 
     this.expressApplication.use(
-      '/static',
+      RestRoute.STATIC,
       express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
 
@@ -61,9 +62,9 @@ export default class RestApplication {
   private async initRoutes() {
     this.logger.info('Controller initialization…');
 
-    this.expressApplication.use('/users', this.userController.getRouter());
-    this.expressApplication.use('/offers', this.offerController.getRouter());
-    this.expressApplication.use('/comments', this.commentController.getRouter());
+    this.expressApplication.use(RestRoute.USERS, this.userController.getRouter());
+    this.expressApplication.use(RestRoute.OFFERS, this.offerController.getRouter());
+    this.expressApplication.use(RestRoute.COMMENTS, this.commentController.getRouter());
 
     this.logger.info('Controller initialization completed');
   }
