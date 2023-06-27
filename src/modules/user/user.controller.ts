@@ -21,7 +21,7 @@ import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middl
 import UpdateUserDto from './dto/update-user.dto.js';
 import { DocumentExistsMiddleware } from './../../core/middlewares/document-exists.middleware.js';
 import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
-import { JWT_ALGORITHM } from './user.const.js';
+import { JWT_ALGORITHM, UserControllerRoute } from './user.const.js';
 import LoggedUserRdo from './rdo/logged-user.rdo.js';
 import type { UnknownRecord } from '../../types/unknown-record.type.js';
 import { UserExistsByEmailMiddleware } from '../../core/middlewares/UserExistsByEmailMiddleware.js';
@@ -37,13 +37,36 @@ export default class UserController extends Controller {
     super(logger, configService);
     this.logger.info('Register routes for UserController…');
 
-    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)] });
-    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)] });
-    this.addRoute({ path: '/email', method: HttpMethod.Get, handler: this.findByEmail, middlewares: [new UserExistsByEmailMiddleware(this.userService)] });
-    this.addRoute({ path: '/:userId', method: HttpMethod.Put, handler: this.updateById, middlewares: [new ValidateObjectIdMiddleware('userId'), new DocumentExistsMiddleware(this.userService, 'User', 'userId'), new ValidateDtoMiddleware(UpdateUserDto)] });
-
     this.addRoute({
-      path: '/:userId/avatar',
+      path: UserControllerRoute.REGISTER,
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+    });
+    this.addRoute({
+      path: UserControllerRoute.LOGIN,
+      method: HttpMethod.Post,
+      handler: this.login,
+      middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
+    });
+    this.addRoute({
+      path: UserControllerRoute.EMAIL,
+      method: HttpMethod.Get,
+      handler: this.findByEmail,
+      middlewares: [new UserExistsByEmailMiddleware(this.userService)]
+    });
+    this.addRoute({
+      path: UserControllerRoute.USER,
+      method: HttpMethod.Put,
+      handler: this.updateById,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
+        new ValidateDtoMiddleware(UpdateUserDto)
+      ]
+    });
+    this.addRoute({
+      path: UserControllerRoute.AVATAR,
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
@@ -53,7 +76,7 @@ export default class UserController extends Controller {
       ]
     });
     this.addRoute({
-      path: '/login',
+      path: UserControllerRoute.LOGIN,
       method: HttpMethod.Get,
       handler: this.checkAuthenticate,
     });
