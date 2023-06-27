@@ -89,7 +89,6 @@ export default class OfferController extends Controller {
     await this.offerService.update(offerId, updateDto);
     this.created(res, fillDTO(UploadImageResponse, { updateDto }));
   }
-  
 
   public async uploadImage(req: Request<ParamsOfferDetails>, res: Response) {
     const {offerId} = req.params;
@@ -123,13 +122,13 @@ export default class OfferController extends Controller {
     const { city } = query;
     const cityValue = city as City;
 
-  if (!cityValue || !(cityValue in City)) {
-    throw new HttpError(
-      StatusCodes.FORBIDDEN,
-      'Invalid city',
-      'UserController'
-    );
-  }
+    if(!cityValue || !(cityValue in City)) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'Invalid city',
+        'UserController'
+      );
+    }
     const offers = await this.offerService.getPremiumOffersForCity(cityValue);
     this.ok(res, fillDTO(OfferRdo, offers || []));
   }
