@@ -9,9 +9,10 @@ import type { DatabaseClientInterface } from '../core/database-client/mongo-clie
 import { AppComponent } from '../types/app-component.enum.js';
 import { getMongoURI } from '../core/helpers/db.js';
 import { ControllerInterface } from '../core/controller/controller.interface.js';
-import { ExceptionFilterInterface } from '../core/expception-filters/exception-filter.interface.js';
+import { ExceptionFilterInterface } from '../core/exception-filters/exception-filter.interface.js';
 import { AuthenticateMiddleware } from '../core/middlewares/authenticate.middleware.js';
 import { getFullServerPath } from '../core/helpers/common.js';
+import { EnvConfig, RestRoute } from './rest.const.js';
 
 
 @injectable()
@@ -30,7 +31,7 @@ export default class RestApplication {
     this.expressApplication = express();
   }
 
-  private async _initExceptionFilters() {
+  private async initExceptionFilters() {
     this.logger.info('Exception filters initialization');
 
     this.expressApplication.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
@@ -38,18 +39,18 @@ export default class RestApplication {
     this.logger.info('Exception filters completed');
   }
 
-  private async _initMiddleware() {
+  private async initMiddleware() {
     this.logger.info('Global middleware initialization…');
 
     this.expressApplication.use(express.json());
     this.expressApplication.use(
-      '/upload',
-      express.static(this.config.get('UPLOAD_DIRECTORY'))
+      RestRoute.UPLOAD,
+      express.static(this.config.get(EnvConfig.UPLOAD_DIRECTORY))
     );
 
     this.expressApplication.use(
-      '/static',
-      express.static(this.config.get('STATIC_DIRECTORY_PATH'))
+      RestRoute.STATIC,
+      express.static(this.config.get(EnvConfig.STATIC_DIRECTORY_PATH))
     );
 
     const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
@@ -58,25 +59,25 @@ export default class RestApplication {
     this.logger.info('Global middleware initialization completed');
   }
 
-  private async _initRoutes() {
+  private async initRoutes() {
     this.logger.info('Controller initialization…');
 
-    this.expressApplication.use('/users', this.userController.router);
-    this.expressApplication.use('/offers', this.offerController.router);
-    this.expressApplication.use('/comments', this.commentController.router);
+    this.expressApplication.use(RestRoute.USERS, this.userController.getRouter());
+    this.expressApplication.use(RestRoute.OFFERS, this.offerController.getRouter());
+    this.expressApplication.use(RestRoute.COMMENTS, this.commentController.getRouter());
 
     this.logger.info('Controller initialization completed');
   }
 
-  private async _initDb() {
+  private async initDb() {
     this.logger.info('Init database…');
 
     const mongoUri = getMongoURI(
-      this.config.get('MONGO_INITDB_ROOT_USERNAME'),
-      this.config.get('MONGO_INITDB_ROOT_PASSWORD'),
-      this.config.get('DB_HOST'),
-      this.config.get('DB_PORT'),
-      this.config.get('DB_NAME'),
+      this.config.get(EnvConfig.MONGO_INITDB_ROOT_USERNAME),
+      this.config.get(EnvConfig.MONGO_INITDB_ROOT_PASSWORD),
+      this.config.get(EnvConfig.DB_HOST),
+      this.config.get(EnvConfig.DB_PORT),
+      this.config.get(EnvConfig.DB_NAME),
     );
 
     await this.databaseClient.connect(mongoUri);
@@ -84,11 +85,11 @@ export default class RestApplication {
     this.logger.info('Init database completed');
   }
 
-  private async _initServer() {
+  private async initServer() {
     this.logger.info('Try to init server...');
 
-    const host = this.config.get('HOST');
-    const port = this.config.get('PORT');
+    const host = this.config.get(EnvConfig.HOST);
+    const port = this.config.get(EnvConfig.PORT);
     this.expressApplication.listen(port);
 
     this.logger.info(`🚀Server started on ${getFullServerPath(host, port)}`);
@@ -97,17 +98,17 @@ export default class RestApplication {
   public async init() {
     this.logger.info('Application initialization…');
 
-    await this._initDb().catch((error) => {
+    await this.initDb().catch((error) => {
       this.logger.error(`Error during database initialization: ${error.message}`);
     });
 
-    await this._initMiddleware();
+    await this.initMiddleware();
 
-    await this._initRoutes();
+    await this.initRoutes();
 
-    await this._initExceptionFilters();
+    await this.initExceptionFilters();
 
-    await this._initServer().catch((error) => {
+    await this.initServer().catch((error) => {
       this.logger.error(`Error server initialization: ${error.message}`);
     });
   }
