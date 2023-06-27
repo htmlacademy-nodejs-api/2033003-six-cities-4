@@ -32,3 +32,16 @@ export const cityCoordinates: Record<City, CityCoordinates> = {
   [City.Dusseldorf]: { latitude: 51.225402, longitude: 6.776314 }
 };
 
+export enum OfferControllerRoute {
+  FAVORITES = '/favorites',
+  ADD_TO_FAVORITES = '/favorites/:offerId',
+  REMOVE_FROM_FAVORITES = '/favorites/:offerId',
+  OFFER_DETAILS = '/:offerId',
+  CREATE_OFFER = '/',
+  INDEX = '/',
+  UPDATE = '/:offerId',
+  DELETE_OFFER = '/:offerId',
+  PREMIUM_OFFERS_FOR_CITY = '/premium/:city',
+  GET_COMMENTS = '/:offerId/comments',
+  UPLOAD_IMAGE = '/:offerId/image',
+}

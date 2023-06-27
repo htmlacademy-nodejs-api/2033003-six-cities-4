@@ -45,7 +45,7 @@ export default class MongoClientService implements DatabaseClientInterface {
         this.isConnected = true;
       })
       .catch((error) => {
-        this.logger.error('Failed to connect to the database in _connect function');
+        this.logger.error('Failed to connect to the database in connect function');
         throw error;
       });
   }
