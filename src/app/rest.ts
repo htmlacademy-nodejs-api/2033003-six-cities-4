@@ -12,7 +12,7 @@ import { ControllerInterface } from '../core/controller/controller.interface.js'
 import { ExceptionFilterInterface } from '../core/exception-filters/exception-filter.interface.js';
 import { AuthenticateMiddleware } from '../core/middlewares/authenticate.middleware.js';
 import { getFullServerPath } from '../core/helpers/common.js';
-import { RestRoute } from './rest.const.js';
+import { EnvConfig, RestRoute } from './rest.const.js';
 
 @injectable()
 export default class RestApplication {
@@ -44,12 +44,12 @@ export default class RestApplication {
     this.expressApplication.use(express.json());
     this.expressApplication.use(
       RestRoute.UPLOAD,
-      express.static(this.config.get('UPLOAD_DIRECTORY'))
+      express.static(this.config.get(EnvConfig.UPLOAD_DIRECTORY))
     );
 
     this.expressApplication.use(
       RestRoute.STATIC,
-      express.static(this.config.get('STATIC_DIRECTORY_PATH'))
+      express.static(this.config.get(EnvConfig.STATIC_DIRECTORY_PATH))
     );
 
     const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
@@ -72,11 +72,11 @@ export default class RestApplication {
     this.logger.info('Init database…');
 
     const mongoUri = getMongoURI(
-      this.config.get('MONGO_INITDB_ROOT_USERNAME'),
-      this.config.get('MONGO_INITDB_ROOT_PASSWORD'),
-      this.config.get('DB_HOST'),
-      this.config.get('DB_PORT'),
-      this.config.get('DB_NAME'),
+      this.config.get(EnvConfig.MONGO_INITDB_ROOT_USERNAME),
+      this.config.get(EnvConfig.MONGO_INITDB_ROOT_PASSWORD),
+      this.config.get(EnvConfig.DB_HOST),
+      this.config.get(EnvConfig.DB_PORT),
+      this.config.get(EnvConfig.DB_NAME),
     );
 
     await this.databaseClient.connect(mongoUri);
@@ -87,8 +87,8 @@ export default class RestApplication {
   private async initServer() {
     this.logger.info('Try to init server...');
 
-    const host = this.config.get('HOST');
-    const port = this.config.get('PORT');
+    const host = this.config.get(EnvConfig.HOST);
+    const port = this.config.get(EnvConfig.PORT);
     this.expressApplication.listen(port);
 
     this.logger.info(`🚀Server started on ${getFullServerPath(host, port)}`);

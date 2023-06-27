@@ -1,6 +1,7 @@
 import {Expose, Type} from 'class-transformer';
 
 import UserResponse from '../../user/response/user.response.js';
+import { PopulateField } from '../../../app/rest.const.js';
 
 export default class OfferResponse {
   @Expose()
@@ -27,7 +28,7 @@ export default class OfferResponse {
   @Expose()
   public commentCount!: number;
 
-  @Expose({ name: 'userId'})
+  @Expose({ name: PopulateField.UserId})
   @Type(() => UserResponse)
   public user!: UserResponse;
 }

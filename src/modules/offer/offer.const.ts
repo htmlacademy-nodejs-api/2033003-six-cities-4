@@ -13,6 +13,10 @@ export const MAX_LENGTH_OFFER_DESCRIPTION = 1024;
 export const MIN_OFFER_RATING = 1;
 export const MAX_OFFER_RATING = 5;
 
+export const COUNT_IMAGES = 5;
+
+export const MIN_COUNT_COMMENTS = 0;
+
 export const MIN_COUNT_OFFER_ROOMS = 1;
 export const MAX_COUNT_OFFER_ROOMS = 8;
 

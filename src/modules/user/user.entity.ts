@@ -34,12 +34,16 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true, enum: UserType })
   public userType!: UserType;
 
+  @prop({ default: [] })
+  public favorites: string[];
+
   constructor(userData: CreateUserDto) {
     super();
 
     this.name = userData.name;
     this.email = userData.email;
     this.avatar = userData.avatar;
+    this.favorites = [];
     this.userType = userData.userType as UserType;
   }
 

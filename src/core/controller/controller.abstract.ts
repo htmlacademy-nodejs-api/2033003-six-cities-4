@@ -11,6 +11,7 @@ import { RestSchema } from '../config/rest.schema.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { getFullServerPath, transformObject } from '../helpers/common.js';
 import { STATIC_RESOURCE_FIELDS } from '../../app/rest.const.js';
+import { EnvConfig } from './../../app/rest.const.js';
 
 @injectable()
 export abstract class Controller implements ControllerInterface {
@@ -59,11 +60,11 @@ export abstract class Controller implements ControllerInterface {
   }
 
   protected addStaticPath(data: UnknownRecord): void {
-    const fullServerPath = getFullServerPath(this.configService.get('HOST'), this.configService.get('PORT'));
+    const fullServerPath = getFullServerPath(this.configService.get(EnvConfig.HOST), this.configService.get(EnvConfig.PORT));
     transformObject(
       STATIC_RESOURCE_FIELDS,
-      `${fullServerPath}/${this.configService.get('STATIC_DIRECTORY_PATH')}`,
-      `${fullServerPath}/${this.configService.get('UPLOAD_DIRECTORY')}`,
+      `${fullServerPath}/${this.configService.get(EnvConfig.STATIC_DIRECTORY_PATH)}`,
+      `${fullServerPath}/${this.configService.get(EnvConfig.UPLOAD_DIRECTORY)}`,
       data
     );
   }

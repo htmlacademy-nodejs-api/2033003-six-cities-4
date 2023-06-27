@@ -10,12 +10,15 @@ import UpdateOfferDto from './dto/update-offer.dto.js';
 import type { MongoId } from '../../types/mongoId.type.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import { DEFAULT_OFFERS_COUNT, DEFAULT_PREMIUM_OFFERS_COUNT } from './offer.const.js';
+import { PopulateField } from '../../app/rest.const.js';
+import { UserEntity } from '../user/user.entity.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
   constructor(
     @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface,
-    @inject(AppComponent.OfferModel) private readonly offerModel: ModelType<OfferEntity>
+    @inject(AppComponent.OfferModel) private readonly offerModel: ModelType<OfferEntity>,
+    @inject(AppComponent.UserModel) private readonly userModel: ModelType<UserEntity>
   ) {}
 
   public async exists(documentId: string): Promise<boolean> {
@@ -25,7 +28,7 @@ export default class OfferService implements OfferServiceInterface {
   public async update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
-      .populate(['userId'])
+      .populate([PopulateField.UserId])
       .exec();
   }
 
@@ -39,7 +42,7 @@ export default class OfferService implements OfferServiceInterface {
     const offerLimit = limit || DEFAULT_OFFERS_COUNT;
     return this.offerModel
       .find(query)
-      .populate(['userId'])
+      .populate([PopulateField.UserId])
       .sort({ publicationDate: SortType.Down })
       .limit(offerLimit)
       .exec();
@@ -54,27 +57,52 @@ export default class OfferService implements OfferServiceInterface {
     return this.findOffers(query, DEFAULT_PREMIUM_OFFERS_COUNT);
   }
 
-  public async getFavoriteOffers(): Promise<DocumentType<OfferEntity>[]> {
-    const query = { isFavorite: true };
-    return this.findOffers(query);
+  public async getFavoriteOffers(userId: MongoId): Promise<DocumentType<OfferEntity>[]> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      return [];
+    }
+
+  const favoriteOfferIds = user.favorites;
+  const query = { _id: { $in: favoriteOfferIds }, isFavorite: true };
+
+  return this.findOffers(query);
   }
 
-  public async addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findOneAndUpdate(
-        { _id: offerId },
-        { $set: { isFavorite: true } },
-        { new: true }
-      ).exec();
+  public async addToFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel.findById(offerId).exec();
+    if (!offer) {
+      return null;
+    }
+  
+    await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      { $addToSet: { favorites: offerId } },
+      { new: true }
+    ).exec();
+
+    offer.isFavorite = true;
+    await offer.save();
+
+    return offer;
   }
 
-  public async removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findOneAndUpdate(
-        { _id: offerId },
-        { $set: { isFavorite: false } },
-        { new: true }
-      ).exec();
+  public async removeFromFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel.findById(offerId).exec();
+  if (!offer) {
+    return null;
+  }
+
+  await this.userModel.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { favorites: offerId } },
+    { new: true }
+  ).exec();
+
+  offer.isFavorite = false;
+  await offer.save();
+
+  return offer;
   }
 
   public async incCommentCount(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
@@ -93,7 +121,7 @@ export default class OfferService implements OfferServiceInterface {
   public async getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate(['userId'])
+      .populate([PopulateField.UserId])
       .exec();
   }
 

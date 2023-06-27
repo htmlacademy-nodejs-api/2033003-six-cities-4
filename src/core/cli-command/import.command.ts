@@ -1,3 +1,4 @@
+import { EnvConfig } from './../../app/rest.const.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
 import { getErrorMessage } from '../helpers/common.js';
 import { getMongoURI } from '../helpers/db.js';
@@ -35,7 +36,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.logger = new ConsoleLoggerService();
     this.configService = new ConfigService(this.logger);
     this.userService = new UserService(this.logger, UserModel);
-    this.offerService = new OfferService(this.logger, OfferModel);
+    this.offerService = new OfferService(this.logger, OfferModel, UserModel);
     this.databaseService = new MongoClientService(this.logger);
   }
 
@@ -74,7 +75,7 @@ export default class ImportCommand implements CliCommandInterface {
     dbname = 'six-cities',
     salt = 'secret'
   ): Promise<void> {
-    const defaulDbPort = this.configService.get('DB_PORT');
+    const defaulDbPort = this.configService.get(EnvConfig.DB_PORT);
     const uri = getMongoURI(login, password, host, defaulDbPort, dbname);
     this.salt = salt;
 
