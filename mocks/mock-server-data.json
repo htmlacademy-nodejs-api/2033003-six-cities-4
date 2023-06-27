@@ -60,11 +60,7 @@
       true
     ],
     "isFavorite": [
-      false,
-      true,
-      true,
-      false,
-      true
+      false
     ],"ratings": [
       4.5,
       4.7,

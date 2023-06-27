@@ -29,6 +29,7 @@ import { RestSchema } from '../../core/config/rest.schema.js';
 import UploadImageResponse from './rdo/upload-image.response.js';
 import { OfferControllerRoute } from './offer.const.js';
 import { EnvConfig, PopulateField } from '../../app/rest.const.js';
+import { City } from '../../types/city.enum.js';
 
 type ParamsOfferDetails = {
   offerId: string;
@@ -136,20 +137,21 @@ export default class OfferController extends Controller {
   }
 
   public async index(
-    { query }: Request<core.ParamsDictionary | ParamsGetOffer>,
+    { query, user }: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response
   ): Promise<void> {
     const { limit } = query;
-    //const isAuthorized = !!user;
+    const isAuthorized = !!user;
 
     const offers = await this.offerService.find(Number(limit));
 
-    // const offersWithFavoriteFlag: RentalOffer[] = offers.map((offer) => ({
-    //   ...JSON.parse(JSON.stringify(offer)),
-    //   isFavorite: isAuthorized ? offer.isFavorite : false,
-    // }));
+    const offersWithFavoriteFlag: RentalOffer[] = offers.map((offer) => ({
+      ...JSON.parse(JSON.stringify(offer)),
+      id: offer?.id,
+      isFavorite: isAuthorized ? offer.isFavorite : false,
+    }));
 
-    this.ok(res, fillDTO(OfferRdo, offers || []));
+    this.ok(res, fillDTO(OfferRdo, offersWithFavoriteFlag || []));
   }
 
   public async deleteOffer(
