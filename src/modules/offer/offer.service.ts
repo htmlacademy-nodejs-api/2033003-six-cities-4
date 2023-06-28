@@ -10,12 +10,15 @@ import UpdateOfferDto from './dto/update-offer.dto.js';
 import type { MongoId } from '../../types/mongoId.type.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import { DEFAULT_OFFERS_COUNT, DEFAULT_PREMIUM_OFFERS_COUNT } from './offer.const.js';
+import { PopulateField } from '../../app/rest.const.js';
+import { UserEntity } from '../user/user.entity.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
   constructor(
     @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface,
-    @inject(AppComponent.OfferModel) private readonly offerModel: ModelType<OfferEntity>
+    @inject(AppComponent.OfferModel) private readonly offerModel: ModelType<OfferEntity>,
+    @inject(AppComponent.UserModel) private readonly userModel: ModelType<UserEntity>
   ) {}
 
   public async exists(documentId: string): Promise<boolean> {
@@ -25,7 +28,7 @@ export default class OfferService implements OfferServiceInterface {
   public async update(offerId: MongoId, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
-      .populate(['userId'])
+      .populate([PopulateField.UserId])
       .exec();
   }
 
@@ -37,44 +40,59 @@ export default class OfferService implements OfferServiceInterface {
 
   private async findOffers(query: object, limit?: number): Promise<DocumentType<OfferEntity>[]> {
     const offerLimit = limit || DEFAULT_OFFERS_COUNT;
-    return this.offerModel
+    const offers = await this.offerModel
       .find(query)
-      .populate(['userId'])
+      .populate([PopulateField.UserId])
       .sort({ publicationDate: SortType.Down })
       .limit(offerLimit)
       .exec();
+
+    return offers;
   }
 
   public async find(limit?: number): Promise<DocumentType<OfferEntity>[]> {
     return this.findOffers({}, limit);
   }
 
-  public async getPremiumOffersForCity(city: string): Promise<DocumentType<OfferEntity>[]> {
+  public async getPremiumOffersForCity(city?: string): Promise<DocumentType<OfferEntity>[]> {
     const query = { city: city, isPremium: true };
     return this.findOffers(query, DEFAULT_PREMIUM_OFFERS_COUNT);
   }
 
-  public async getFavoriteOffers(): Promise<DocumentType<OfferEntity>[]> {
-    const query = { isFavorite: true };
+  public async getFavoriteOffers(userId: MongoId): Promise<DocumentType<OfferEntity>[]> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      return [];
+    }
+
+    const favoriteOfferIds = user.favorites;
+    const query = { _id: { $in: favoriteOfferIds }, isFavorite: true };
+
     return this.findOffers(query);
   }
 
-  public async addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
+  public async addToFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
+    await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      { $addToSet: { favorites: offerId } },
+      { new: true }
+    ).exec();
+
     return this.offerModel
-      .findOneAndUpdate(
-        { _id: offerId },
-        { $set: { isFavorite: true } },
-        { new: true }
-      ).exec();
+      .findOneAndUpdate({ _id: offerId}, {$set: {isFavorite: true}}, {new: true})
+      .exec();
   }
 
-  public async removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
+  public async removeFromFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null> {
+    await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      { $addToSet: { favorites: offerId } },
+      { new: true }
+    ).exec();
+
     return this.offerModel
-      .findOneAndUpdate(
-        { _id: offerId },
-        { $set: { isFavorite: false } },
-        { new: true }
-      ).exec();
+      .findOneAndUpdate({ _id: offerId}, {$set: {isFavorite: false}}, {new: true})
+      .exec();
   }
 
   public async incCommentCount(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
@@ -93,8 +111,7 @@ export default class OfferService implements OfferServiceInterface {
   public async getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate(['userId'])
+      .populate([PopulateField.UserId])
       .exec();
   }
-
 }

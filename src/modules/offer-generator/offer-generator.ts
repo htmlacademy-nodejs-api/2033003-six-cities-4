@@ -18,7 +18,7 @@ export default class OfferGenerator implements OfferGeneratorInterface {
     const previewImage = getRandomItem<string>(this.mockData.previewImages);
     const images = getRandomImages(this.mockData.images).join(';');
     const isPremium = getRandomBoolean();
-    const isFavorite = getRandomBoolean();
+    const isFavorite = false;
     const rating = generateRandomValue(MIN_OFFER_RATING, MAX_OFFER_RATING, 1).toString();
     const type = getRandomItem<string>([RentalType.Apartment, RentalType.Hotel, RentalType.House, RentalType.Room]);
     const rooms = generateRandomValue(MIN_COUNT_OFFER_ROOMS, MAX_COUNT_OFFER_ROOMS).toString();

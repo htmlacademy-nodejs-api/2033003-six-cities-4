@@ -9,6 +9,7 @@ import { MongoId } from '../../types/mongoId.type.js';
 import { OfferEntity } from '../offer/offer.entity.js';
 import { DEFAULT_COMMENTS_COUNT } from './comment.const.js';
 import { SortType } from '../../types/sort-type.enum.js';
+import { PopulateField } from '../../app/rest.const.js';
 
 @injectable()
 export default class CommentService implements CommentServiceInterface {
@@ -42,7 +43,7 @@ export default class CommentService implements CommentServiceInterface {
 
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const comment = await this.commentModel.create(dto);
-    return comment.populate('userId');
+    return comment.populate(PopulateField.UserId);
   }
 
   public async findByOfferId(offerId: MongoId): Promise<DocumentType<CommentEntity>[]> {
@@ -50,6 +51,6 @@ export default class CommentService implements CommentServiceInterface {
       .find({offerId})
       .sort({ publicationDate: SortType.Down })
       .limit(DEFAULT_COMMENTS_COUNT)
-      .populate('userId');
+      .populate(PopulateField.UserId);
   }
 }

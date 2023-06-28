@@ -1,8 +1,8 @@
 # Объявления
 ## Объявление по идентификатору
 
-GET http://localhost:4000/offers/648eee42ce55121b171f3dbb HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
+GET http://localhost:4000/offers/649b29412f09c9a57c164c1f HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###
 
@@ -10,25 +10,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0I
 
 POST http://localhost:4000/offers/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5OWQ1YmFkNzdhMjE1YzBmNTcwZjg5IiwiaWF0IjoxNjg3ODAzMzMyLCJleHAiOjE2ODc5NzYxMzJ9.qZDdsUOh3aFB7UfMwSviMpgL88IMDqaZbd5MQxyEZO0
 
 {
   "title": "Роскошный отель в Брюсселе",
   "description": "Просторный дом с прекрасным видом на каналы Амстердама. Идеальное место для семейного отдыха и экскурсий по городу.",
   "publicationDate": "2023-05-12T00:00:00.000Z",
-  "city": "Cologne",
+  "city": "Paris",
   "coordinates": {
-    "latitude": 50.938361,
-    "longitude": 6.959974
+    "latitude": 48.85661,
+    "longitude": 2.351499
   },
-  "previewImage": "cologne-room.jpg",
+  "previewImage": "kF2sPYiLb2igLRvte81CN.png",
   "images": [
-    "paris-apartment1.jpg",
-    "amsterdam-house1.jpg",
-    "cologne-room2.jpg",
-    "brussels-hotel2.jpg",
-    "brussels-hotel2.jpg",
-    "hamburg-villa2.jpg"
+    "kF2sPYiLb2igLRvte81CN.png",
+    "kF2sPYiLb2igLRvte81CN.png",
+    "kF2sPYiLb2igLRvte81CN.png",
+    "kF2sPYiLb2igLRvte81CN.png",
+    "kF2sPYiLb2igLRvte81CN.png",
+    "kF2sPYiLb2igLRvte81CN.png"
   ],
   "isPremium": true,
   "isFavorite": true,
@@ -51,10 +51,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0I
 
 ## Обновление существующего объявления
 
-PUT http://localhost:4000/offers/648ed4f3a2d4bfc1b3ea2392 HTTP/1.1
+PATCH http://localhost:4000/offers/649b29412f09c9a57c164c27 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 {
+  "city": "Paris",
   "title": "Роскошная баня в Брюсселе",
   "description": "Просторная баня с прекрасным видом на каналы Амстердама. Идеальное место для семейного отдыха и экскурсий по городу.",
   "publicationDate": "2023-06-19T00:00:00.000Z",
@@ -74,40 +76,41 @@ Content-Type: application/json
 
 ## Удаление существующего объявления
 
-DELETE http://localhost:4000/offers/648eec37ce55121b171f3d57 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODczNTY3ODgsImV4cCI6MTY4NzUyOTU4OH0.XL98vqazdSd7s72JhYwcJq0f5XTWIvjwR8uVrGZdtAY
+DELETE http://localhost:4000/offers/649b29412f09c9a57c164c27 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###
 
 ## Объявления в колличестве указанном в параметре limit
 
 GET http://localhost:4000/offers?limit=60 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcyODMwMDgsImV4cCI6MTY4NzQ1NTgwOH0.7HBupuMnuomXjLAFuOZaMJKzRsqCvwcYosG9DYjt3LY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###
 
 ## Премиальные объявления
-GET http://localhost:4000/offers/premium/Cologne HTTP/1.1
+GET http://localhost:4000/offers/premium?city=Paris HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###
 
 ## Избранные объявления
 
 GET http://localhost:4000/offers/favorites HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###
 
 ## Добавить объявление в избранное
 
-POST http://localhost:4000/offers/favorites/648ed4f3a2d4bfc1b3ea2392 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+POST http://localhost:4000/offers/favorites/649b29412f09c9a57c164c27 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###
 
 ## Убрать объявление из избранного
 
-DELETE http://localhost:4000/offers/favorites/648ed4f3a2d4bfc1b3ea2392 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQG1haWwubmV0IiwiaWQiOiI2NDhlZDE2NjNjYzFkNDAwZjZhMjU5MGEiLCJpYXQiOjE2ODcwODE4MTMsImV4cCI6MTY4NzI1NDYxM30.IXJaOvwzPsgQ5UwW9Roq2cSS7uY66Zo3q57QS7hU08o
+DELETE http://localhost:4000/offers/favorites/649b29412f09c9a57c164c27 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZlbGl1Z2luQGdtYWlsLmNvbSIsImlkIjoiNjQ5YjI5NDEyZjA5YzlhNTdjMTY0YzNhIiwiaWF0IjoxNjg3ODkxNjQ3LCJleHAiOjE2ODgwNjQ0NDd9.PEuKsL9oyiYpPxjeTPe9S-pWiPg0i9oTEmukk7u_Hok
 
 ###

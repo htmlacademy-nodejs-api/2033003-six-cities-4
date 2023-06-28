@@ -193,7 +193,7 @@ paths:
         '401':
           description: Ошибка авторизации
 
-  /offers/premium/{city}:
+  /offers/premium:
     get:
       tags:
         - offers

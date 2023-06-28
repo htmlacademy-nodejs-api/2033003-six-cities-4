@@ -1,3 +1,4 @@
+import { EnvConfig } from './../../app/rest.const.js';
 import { RentalOffer } from '../../types/rental-offer.type.js';
 import { getErrorMessage } from '../helpers/common.js';
 import { getMongoURI } from '../helpers/db.js';
@@ -35,7 +36,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.logger = new ConsoleLoggerService();
     this.configService = new ConfigService(this.logger);
     this.userService = new UserService(this.logger, UserModel);
-    this.offerService = new OfferService(this.logger, OfferModel);
+    this.offerService = new OfferService(this.logger, OfferModel, UserModel);
     this.databaseService = new MongoClientService(this.logger);
   }
 
@@ -62,12 +63,19 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   private onComplete(count: number) {
-    console.log(`${count} rows imported.`);
+    this.logger.info(`${count} rows imported.`);
     this.databaseService.disconnect();
   }
 
-  public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
-    const defaulDbPort = this.configService.get('DB_PORT');
+  public async execute(
+    filename = './mocks/test-data.tsv',
+    login = 'admin',
+    password = 'test',
+    host = 'localhost',
+    dbname = 'six-cities',
+    salt = 'secret'
+  ): Promise<void> {
+    const defaulDbPort = this.configService.get(EnvConfig.DB_PORT);
     const uri = getMongoURI(login, password, host, defaulDbPort, dbname);
     this.salt = salt;
 
@@ -79,7 +87,7 @@ export default class ImportCommand implements CliCommandInterface {
 
     fileReader.read()
       .catch((err) => {
-        console.log(`Can't read the file: ${getErrorMessage(err)}`);
+        this.logger.error(`Can't read the file: ${getErrorMessage(err)}`);
         throw new Error(err);
       });
   }

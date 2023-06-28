@@ -3,18 +3,19 @@ import { IsOptional, Validate, ArrayMinSize, ArrayMaxSize, IsNumber, IsArray, Is
 import { Amenities } from '../../../types/amenities.enum.js';
 import { CityCoordinates } from '../../../types/city-coordinates.type.js';
 import { RentalType } from '../../../types/rental-type.enum.js';
-import { cityCoordinates } from '../offer.const.js';
+import { COUNT_IMAGES, MAX_COUNT_OFFER_GUESTS, MAX_COUNT_OFFER_ROOMS, MAX_LENGTH_OFFER_DESCRIPTION, MAX_LENGTH_OFFER_TITLE, MAX_OFFER_PRICE, MAX_OFFER_RATING, MIN_COUNT_COMMENTS, MIN_COUNT_OFFER_GUESTS, MIN_COUNT_OFFER_ROOMS, MIN_LENGTH_OFFER_DESCRIPTION, MIN_LENGTH_OFFER_TITLE, MIN_OFFER_PRICE, MIN_OFFER_RATING, cityCoordinates } from '../offer.const.js';
 import { IsValidCoordinates } from '../../../core/helpers/common.js';
+import { User } from '../../../types/user.type.js';
 
 export default class UpdateOfferDto {
   @IsOptional()
-  @MinLength(10, {message: 'Minimum title length must be 10'})
-  @MaxLength(100, {message: 'Maximum title length must be 100'})
+  @MinLength(MIN_LENGTH_OFFER_TITLE, {message: `Minimum title length must be ${MIN_LENGTH_OFFER_TITLE}`})
+  @MaxLength(MAX_LENGTH_OFFER_TITLE, {message: `Maximum title length must be ${MAX_LENGTH_OFFER_TITLE}`})
   public title?: string;
 
   @IsOptional()
-  @MinLength(20, {message: 'Minimum description length must be 20'})
-  @MaxLength(1024, {message: 'Maximum description length must be 1024'})
+  @MinLength(MIN_LENGTH_OFFER_DESCRIPTION, {message: `Minimum description length must be ${MIN_LENGTH_OFFER_DESCRIPTION}`})
+  @MaxLength(MAX_LENGTH_OFFER_DESCRIPTION, {message: `Maximum description length must be ${MAX_LENGTH_OFFER_DESCRIPTION}`})
   public description?: string;
 
   @IsOptional()
@@ -35,8 +36,8 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsArray()
-  @ArrayMinSize(6, { message: 'Images array must contain at least 6 images' })
-  @ArrayMaxSize(6, { message: 'Images array can contain at most 6 images' })
+  @ArrayMinSize(COUNT_IMAGES, { message: `Images array must contain at least ${COUNT_IMAGES}`})
+  @ArrayMaxSize(COUNT_IMAGES, { message: `Images array can contain at most ${COUNT_IMAGES}`})
   public images?: string[];
 
   @IsOptional()
@@ -49,8 +50,8 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsNumber({ allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 }, { message: 'Rating must be a valid number' })
-  @Min(1, { message: 'Minimum rating value must be 1' })
-  @Max(5, { message: 'Maximum rating value must be 5' })
+  @Min(MIN_OFFER_RATING, { message: `Minimum rating value must be ${MIN_OFFER_RATING}`})
+  @Max(MAX_OFFER_RATING, { message: `Maximum rating value must be ${MAX_OFFER_RATING}` })
   public rating?: number;
 
   @IsOptional()
@@ -59,20 +60,20 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsInt({ message: 'Rooms must be an integer' })
-  @Min(1, { message: 'Minimum number of rooms must be 1' })
-  @Max(8, { message: 'Maximum number of rooms must be 8' })
+  @Min(MIN_COUNT_OFFER_ROOMS, { message: `Minimum number of rooms must be ${MIN_COUNT_OFFER_ROOMS}` })
+  @Max(MAX_COUNT_OFFER_ROOMS, { message: `Maximum number of rooms must be ${MAX_COUNT_OFFER_ROOMS}` })
   public rooms?: number;
 
   @IsOptional()
   @IsInt({ message: 'Guests must be an integer' })
-  @Min(1, { message: 'Minimum number of rooms must be 1' })
-  @Max(10, { message: 'Maximum number of rooms must be 10' })
+  @Min(MIN_COUNT_OFFER_GUESTS, { message: `Minimum number of guests must be ${MIN_COUNT_OFFER_GUESTS}` })
+  @Max(MAX_COUNT_OFFER_GUESTS, { message: `Maximum number of guests must be ${MAX_COUNT_OFFER_GUESTS}` })
   public guests?: number;
 
   @IsOptional()
   @IsInt({ message: 'Price must be an integer' })
-  @Min(100, { message: 'Minimum number of price must be 100' })
-  @Max(100000, { message: 'Maximum number of price must be 100000' })
+  @Min(MIN_OFFER_PRICE, { message: `Minimum number of price must be ${MIN_OFFER_PRICE}` })
+  @Max(MAX_OFFER_PRICE, { message: `Maximum number of price must be ${MAX_OFFER_PRICE}` })
   public price?: number;
 
   @IsOptional()
@@ -81,10 +82,10 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsMongoId({message: 'Author field must be valid an id'})
-  public userId?: string;
+  public userId?: User;
 
   @IsOptional()
   @IsInt({ message: 'Comment count must be an integer' })
-  @Min(0, { message: 'Comment count cannot be negative' })
+  @Min(MIN_COUNT_COMMENTS, { message: 'Comment count cannot be negative' })
   public commentCount?: number;
 }

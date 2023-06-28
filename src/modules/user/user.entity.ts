@@ -5,6 +5,7 @@ import type { User } from '../../types/user.type.js';
 import { createSHA256 } from '../../core/helpers/index.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import { MAX_LENGTH_USERNAME, MIN_LENGTH_USERNAME } from './user.const.js';
+import { Matches } from 'class-validator';
 
 const { prop, modelOptions, getModelForClass } = typegoose;
 
@@ -24,7 +25,8 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   public email: string;
 
   @prop({ required: true })
-  public avatar: string;
+  @Matches(/\.(jpg|png)$/, { message: 'Avatar must be in JPG or PNG format' })
+  public avatar?: string;
 
   @prop({ required: true })
   private password?: string;
@@ -32,12 +34,16 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true, enum: UserType })
   public userType!: UserType;
 
+  @prop({ default: [] })
+  public favorites: string[];
+
   constructor(userData: CreateUserDto) {
     super();
 
     this.name = userData.name;
     this.email = userData.email;
     this.avatar = userData.avatar;
+    this.favorites = [];
     this.userType = userData.userType as UserType;
   }
 

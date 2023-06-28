@@ -26,12 +26,10 @@ export const comparePassword = (password: string, hashedPassword: string, salt: 
 
 export function getCoordinates(city: string): CityCoordinates {
   const cityEnum: City = City[city as keyof typeof City];
-  if (cityEnum) {
-    const { latitude, longitude } = cityCoordinates[cityEnum];
-    return { latitude, longitude };
-  } else {
+  if (!cityEnum) {
     throw new Error('Invalid city');
   }
+  return cityCoordinates[cityEnum];
 }
 
 export function createErrorObject(message: string) {
@@ -84,22 +82,32 @@ export function transformProperty(
   someObject: UnknownRecord,
   transformFn: (object: UnknownRecord) => void
 ) {
-  return Object.keys(someObject)
-    .forEach((key) => {
-      if (key === property) {
-        transformFn(someObject);
-      } else if (isObject(someObject[key])) {
-        transformProperty(property, someObject[key] as UnknownRecord, transformFn);
-      }
-    });
+  Object.keys(someObject).forEach((key) => {
+    if (key === property) {
+      transformFn(someObject);
+    } else if (isObject(someObject[key])) {
+      transformProperty(property, someObject[key] as UnknownRecord, transformFn);
+    } else if (Array.isArray(someObject[key])) {
+      (someObject[key] as UnknownRecord[]).forEach((nestedObject) => {
+        if (isObject(nestedObject)) {
+          transformProperty(property, nestedObject, transformFn);
+        }
+      });
+    }
+  });
 }
 
-export function transformObject(properties: string[], staticPath: string, uploadPath: string, data:UnknownRecord) {
-  return properties
-    .forEach((property) => {
-      transformProperty(property, data, (target: UnknownRecord) => {
-        const rootPath = DEFAULT_STATIC_IMAGES.includes(target[property] as string) ? staticPath : uploadPath;
+export function transformObject(properties: string[], staticPath: string, uploadPath: string, data: UnknownRecord) {
+  const transformedData: UnknownRecord = { ...data };
+  properties.forEach((property) => {
+    transformProperty(property, transformedData, (target: UnknownRecord) => {
+      const rootPath = DEFAULT_STATIC_IMAGES.includes(target[property] as string) ? staticPath : uploadPath;
+      if (typeof target[property] === 'string') {
         target[property] = `${rootPath}/${target[property]}`;
-      });
+      } else if (Array.isArray(target[property])) {
+        target[property] = (target[property] as string[]).map((value) => `${rootPath}/${value}`);
+      }
     });
+  });
+  return transformedData;
 }

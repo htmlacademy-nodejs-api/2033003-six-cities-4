@@ -7,7 +7,7 @@ import { RentalType } from '../../types/rental-type.enum.js';
 import { City } from '../../types/city.enum.js';
 import { UserEntity } from '../user/user.entity.js';
 import { CityCoordinates } from '../../types/city-coordinates.type.js';
-import { MAX_COUNT_OFFER_GUESTS, MAX_COUNT_OFFER_ROOMS, MAX_LENGTH_OFFER_DESCRIPTION, MAX_LENGTH_OFFER_TITLE, MAX_OFFER_PRICE, MAX_OFFER_RATING, MIN_COUNT_OFFER_GUESTS, MIN_COUNT_OFFER_ROOMS, MIN_LENGTH_OFFER_DESCRIPTION, MIN_LENGTH_OFFER_TITLE, MIN_OFFER_PRICE, MIN_OFFER_RATING } from './offer.const.js';
+import { MAX_COUNT_OFFER_GUESTS, MAX_COUNT_OFFER_ROOMS, MAX_LENGTH_OFFER_DESCRIPTION, MAX_LENGTH_OFFER_TITLE, MAX_OFFER_PRICE, MAX_OFFER_RATING, MIN_COUNT_COMMENTS, MIN_COUNT_OFFER_GUESTS, MIN_COUNT_OFFER_ROOMS, MIN_LENGTH_OFFER_DESCRIPTION, MIN_LENGTH_OFFER_TITLE, MIN_OFFER_PRICE, MIN_OFFER_RATING } from './offer.const.js';
 
 const {prop, modelOptions, getModelForClass} = typegoose;
 
@@ -40,7 +40,7 @@ export class OfferEntity extends defaultClasses.TimeStamps{
   @prop({ required: true , default: ''})
   public previewImage!: string;
 
-  @prop({ required: true, type: [String] })
+  @prop({ required: true })
   public images!: string[];
 
   @prop({ required: true })
@@ -70,7 +70,7 @@ export class OfferEntity extends defaultClasses.TimeStamps{
   @prop({ ref: UserEntity, required: true })
   public userId!: Ref<UserEntity>;
 
-  @prop({default: 0})
+  @prop({default: MIN_COUNT_COMMENTS})
   public commentCount!: number;
 
   @prop()

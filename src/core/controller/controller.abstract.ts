@@ -11,20 +11,21 @@ import { RestSchema } from '../config/rest.schema.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { getFullServerPath, transformObject } from '../helpers/common.js';
 import { STATIC_RESOURCE_FIELDS } from '../../app/rest.const.js';
+import { EnvConfig } from './../../app/rest.const.js';
 
 @injectable()
 export abstract class Controller implements ControllerInterface {
-  private readonly _router: Router;
+  private readonly router: Router;
 
   constructor(
     protected readonly logger: LoggerInterface,
     protected readonly configService: ConfigInterface<RestSchema>,
   ) {
-    this._router = Router();
+    this.router = Router();
   }
 
-  get router() {
-    return this._router;
+  getRouter() {
+    return this.router;
   }
 
   public addRoute(route: RouteInterface) {
@@ -34,7 +35,7 @@ export abstract class Controller implements ControllerInterface {
     );
 
     const allHandlers = middlewares ? [...middlewares, routeHandler] : routeHandler;
-    this._router[route.method](route.path, allHandlers);
+    this.router[route.method](route.path, allHandlers);
     this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 
@@ -59,11 +60,11 @@ export abstract class Controller implements ControllerInterface {
   }
 
   protected addStaticPath(data: UnknownRecord): void {
-    const fullServerPath = getFullServerPath(this.configService.get('HOST'), this.configService.get('PORT'));
+    const fullServerPath = getFullServerPath(this.configService.get(EnvConfig.HOST), this.configService.get(EnvConfig.PORT));
     transformObject(
-      STATIC_RESOURCE_FIELDS,
-      `${fullServerPath}/${this.configService.get('STATIC_DIRECTORY_PATH')}`,
-      `${fullServerPath}/${this.configService.get('UPLOAD_DIRECTORY')}`,
+      STATIC_RESOURCE_FIELDS as string[],
+      `${fullServerPath}/${this.configService.get(EnvConfig.STATIC_DIRECTORY_PATH)}`,
+      `${fullServerPath}/${this.configService.get(EnvConfig.UPLOAD_DIRECTORY)}`,
       data
     );
   }

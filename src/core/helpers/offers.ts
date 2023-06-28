@@ -30,10 +30,10 @@ export function createOffer(offerData: string): RentalOffer {
 
   let userTypeValue: UserType;
 
-  if (userType === UserType.Base || userType === UserType.Pro) {
+  if (userType === UserType.Regular || userType === UserType.Pro) {
     userTypeValue = userType as UserType;
   } else {
-    userTypeValue = UserType.Base;
+    userTypeValue = UserType.Regular;
   }
 
   const user = {

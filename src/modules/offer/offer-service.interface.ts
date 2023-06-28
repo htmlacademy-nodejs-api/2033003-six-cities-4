@@ -15,11 +15,11 @@ export interface OfferServiceInterface extends DocumentExistsInterface {
 
   getOfferDetails(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 
-  getPremiumOffersForCity(city: string): Promise<DocumentType<OfferEntity>[]>;
+  getPremiumOffersForCity(city?: string): Promise<DocumentType<OfferEntity>[]>;
 
-  getFavoriteOffers(): Promise<DocumentType<OfferEntity>[]>;
-  addToFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
-  removeFromFavorites(offerId: MongoId): Promise<DocumentType<OfferEntity> | null>;
+  getFavoriteOffers(userId: MongoId): Promise<DocumentType<OfferEntity>[]>;
+  addToFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null>;
+  removeFromFavorites(offerId: MongoId, userId: MongoId): Promise<DocumentType<OfferEntity> | null>;
 
   incCommentCount(offerId: MongoId):Promise<DocumentType<OfferEntity> | null>;
 

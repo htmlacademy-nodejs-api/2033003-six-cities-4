@@ -29,18 +29,28 @@
       "Hamburg"
     ],
     "previewImages": [
-      "paris-apartment.jpg",
-      "amsterdam-house.jpg",
-      "cologne-room.jpg",
-      "brussels-hotel.jpg",
-      "hamburg-villa.jpg"
+      "ZtSiBdySDHm6lciGycS4A.png",
+      "ycKI8iDICpowfu8dhd5i4.png",
+      "xVvD6miQ5SB2ICpYbTObO.png",
+      "Xueqh6hGiaBRPsJdrKvS0.png",
+      "xSGuXiQBsiDrbOYkvrnBJ.png",
+      "Wty4bYv1wXSEivU64uAoI.png",
+      "wgUf4DByX3CYt3Jk3U6yB.png",
+      "wdR9L-xJ--RPA-XOWVNkV.png",
+      "U7gI7IO7WJs_ExsySw3zj.png",
+      "SxoJxc9m_mfVg0yqJR6wQ.png",
+      "rd2ypaSjUfKzc9rr-rD6q.png",
+      "QrOKAuP2MU927ftygy5i9.png",
+      "PraDpKrRn5C9mvygP_nyg.png",
+      "iGMY6Z5AE1ws3rgdIL5Jh.png",
+      "G5Tlb59ATbY8yN_qiXLYt.png"
     ],
     "images": [
-      ["https://paris-apartment1.jpg", "https://paris-apartment2.jpg", "https://paris-apartment3.jpg"],
-      ["https://amsterdam-house1.jpg", "https://amsterdam-house2.jpg", "https://amsterdam-house3.jpg"],
-      ["https://cologne-room1.jpg", "https://cologne-room2.jpg", "https://cologne-room3.jpg"],
-      ["https://brussels-hotel1.jpg", "https://brussels-hotel2.jpg", "https://brussels-hotel3.jpg"],
-      ["https://hamburg-villa1.jpg", "https://hamburg-villa2.jpg", "https://hamburg-villa3.jpg"]
+      ["ZtSiBdySDHm6lciGycS4A.png", "ycKI8iDICpowfu8dhd5i4.png", "xVvD6miQ5SB2ICpYbTObO.png"],
+      ["Xueqh6hGiaBRPsJdrKvS0.png", "xSGuXiQBsiDrbOYkvrnBJ.png", "Wty4bYv1wXSEivU64uAoI.png"],
+      ["wgUf4DByX3CYt3Jk3U6yB.png", "wdR9L-xJ--RPA-XOWVNkV.png", "U7gI7IO7WJs_ExsySw3zj.png"],
+      ["SxoJxc9m_mfVg0yqJR6wQ.png", "rd2ypaSjUfKzc9rr-rD6q.png", "QrOKAuP2MU927ftygy5i9.png"],
+      ["PraDpKrRn5C9mvygP_nyg.png", "iGMY6Z5AE1ws3rgdIL5Jh.png", "G5Tlb59ATbY8yN_qiXLYt.png"]
     ],
     "isPremium": [
       true,
@@ -50,11 +60,7 @@
       true
     ],
     "isFavorite": [
-      false,
-      true,
-      true,
-      false,
-      true
+      false
     ],"ratings": [
       4.5,
       4.7,
@@ -100,39 +106,39 @@
     ],
     "users": [
       {
-        "name": "Анна",
-        "email": "anna@example.com",
-        "avatar": "https://anna-avatar.jpg",
-        "password": "password1",
-        "userType": "обычный"
+        "name": "Александр",
+        "email": "feliugin@gmail.com",
+        "avatar": "2XYzz1gB7GT2OP1Y7v3uj.png",
+        "password": "123456",
+        "userType": "pro"
       },
       {
         "name": "Михаил",
         "email": "mikhail@example.com",
-        "avatar": "https://mikhail-avatar.jpg",
+        "avatar": "2XYzz1gB7GT2OP1Y7v3uj.png",
         "password": "password2",
         "userType": "pro"
       },
       {
         "name": "Ольга",
         "email": "olga@example.com",
-        "avatar": "https://olga-avatar.jpg",
+        "avatar": "2XYzz1gB7GT2OP1Y7v3uj.png",
         "password": "password3",
-        "userType": "обычный"
+        "userType": "regular"
       },
       {
         "name": "Александр",
         "email": "alexander@example.com",
-        "avatar": "https://alexander-avatar.jpg",
+        "avatar": "2XYzz1gB7GT2OP1Y7v3uj.png",
         "password": "password4",
         "userType": "pro"
       },
       {
         "name": "Екатерина",
         "email": "ekaterina@example.com",
-        "avatar": "https://ekaterina-avatar.jpg",
+        "avatar": "2XYzz1gB7GT2OP1Y7v3uj.png",
         "password": "password5",
-        "userType": "обычный"
+        "userType": "regular"
       }
     ]
   }
