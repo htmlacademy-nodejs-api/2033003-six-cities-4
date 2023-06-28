@@ -19,7 +19,7 @@ export default class CommentService implements CommentServiceInterface {
   ) {}
 
   public async deleteByOfferId(offerId: MongoId): Promise<void> {
-    await this.commentModel.deleteOne({ offerId }).exec();
+    await this.commentModel.deleteMany({ offerId }).exec();
   }
 
   public async createRating(offerId: MongoId): Promise<boolean> {
