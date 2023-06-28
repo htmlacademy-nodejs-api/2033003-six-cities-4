@@ -1,12 +1,19 @@
 import chalk from 'chalk';
 
 import type { CliCommandInterface } from './cli-command.interface.js';
+import { LoggerInterface } from '../logger/logger.interface.js';
+import ConsoleLoggerService from '../logger/console.service.js';
 
 export default class HelpCommand implements CliCommandInterface {
   public readonly name = '--help';
+  private logger: LoggerInterface;
+
+  constructor() {
+    this.logger = new ConsoleLoggerService();
+  }
 
   public async execute(): Promise<void> {
-    console.log(chalk.yellow(`
+    this.logger.info(chalk.yellow(`
         Программа для подготовки данных для REST API сервера.
         Пример:
             main.js --<command> [--arguments]
